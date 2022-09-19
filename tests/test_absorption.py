@@ -1,12 +1,6 @@
-#!/usr/bin/env python
-
-"""Tests for `imkar` package."""
-
 import pytest
 
-
-from imkar import imkar
-
+from imkar import absorption
 
 @pytest.fixture
 def response():
