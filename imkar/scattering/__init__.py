@@ -8,5 +8,7 @@ This module contains functions to calculate the scattering coefficient.
 # from .coefficient import (
 #     )
 
+
 __all__ = [
-    '']
+    ''
+]
