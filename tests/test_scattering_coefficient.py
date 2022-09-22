@@ -142,4 +142,3 @@ def _create_frequencydata(shape, value, frequencies):
     data = np.zeros(shape_new) + value
     p_reference = FrequencyData(data, frequencies)
     return p_reference
-
