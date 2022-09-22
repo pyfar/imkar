@@ -3,8 +3,8 @@ from scipy.integrate import trapezoid
 import numpy as np
 
 
-def spherical(data, coords):
-    """Intergrated over a sphere in spherical coordinates.
+def surface_sphere(data, coords):
+    """Integrate over a set of points sampled on a spherical surface.
 
     .. math::
 
@@ -13,16 +13,14 @@ def spherical(data, coords):
     Parameters
     ----------
     data : FrequencyData
-        Input data to integrate. Its shape is (..., #phi, #theta)
+        Input data to integrate. Its cshape need to be (..., #phi, #theta)
     coords : Coordinates
-        A Coordinate object with the sample points corresponding to the data
-        values. It has the shape of (#phi, #theta).
+        Coordinate points at which the data is sampled. Its cshape needs to be (#phi, #theta), matching the cshape of `data`.
 
     Returns
     -------
     FrequencyData
-        the integrated object. Its shape is (...) and 2 dimentions shorter
-        then before.
+        The integration result. Its dimension is reduced by the last two, which are consumed by the integration.
     """
     ptr = coords.get_sph(convention='top_colat')
     phi = ptr[1, :, 0]
