@@ -8,3 +8,4 @@ according to their modules.
    :maxdepth: 1
 
    modules/imkar.integrate
+   modules/imkar.scattering.coefficient
