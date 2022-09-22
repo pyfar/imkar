@@ -1,5 +1,5 @@
-from .integrate import (spherical)
+from .integrate import (surface_sphere)
 
 
 __all__ = [
-    'spherical']
+    'surface_sphere']
