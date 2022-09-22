@@ -23,6 +23,22 @@ def surface_sphere(data, coords):
     FrequencyData
         The integration result. Its dimension is reduced by the last two,
         which are consumed by the integration.
+
+    Examples
+    --------
+    >>> from imkar import integrate
+    >>> from pyfar import FrequencyData, Coordinates
+    >>> import numpy as np
+    >>> phi, theta = np.meshgrid(
+    >>>     np.linspace(0, 2*np.pi, num=361),
+    >>>     np.linspace(0, np.pi, num=181))
+    >>> coords = Coordinates(
+    >>>     phi, theta, np.ones(phi.shape), 'sph')
+    >>> data_raw = np.ones(phi.shape)
+    >>> data = FrequencyData(data_raw[..., None], 100)
+    >>> result = integrate.surface_sphere(data, coords)
+    >>> result.freq
+    array([[12.56605162+0.j]])
     """
     if coords.cshape != data.cshape[-2:]:
         raise ValueError(

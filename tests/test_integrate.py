@@ -100,8 +100,8 @@ def test_surface_sphere_error_invalid_coordinates_shape():
         integrate.surface_sphere(data, coords)
 
 
-def _create_test_data(phi_deg, theta_deg, data_raw=None, n_bins=1, radius=1):
-    phi, theta = np.meshgrid(phi_deg, theta_deg)
+def _create_test_data(phi_rad, theta_rad, data_raw=None, n_bins=1, radius=1):
+    phi, theta = np.meshgrid(phi_rad, theta_rad)
     coords = Coordinates(
         phi, theta, np.ones(phi.shape)*radius, 'sph')
     if data_raw is None:
