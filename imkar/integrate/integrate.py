@@ -4,11 +4,11 @@ import numpy as np
 
 
 def surface_sphere(data, coords):
-    """Integrate over a set of points sampled on a spherical surface.
+    r"""Integrate over a set of points sampled on a spherical surface.
 
     .. math::
 
-        S &= \\int(\\int(data(\\phi, \\theta)d\\phi)sin(\\theta)\\dtheta),
+        S = \int \int data(\phi, \theta)  sin(\theta) d\phi d\theta
 
     Parameters
     ----------
