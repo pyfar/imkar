@@ -25,7 +25,8 @@ def surface_sphere(data, coords):
         which are consumed by the integration.
     """
     if coords.cshape != data.cshape[-2:]:
-        raise ValueError(r'Coordinates.cshape should be same as data.cshape[-2:]')
+        raise ValueError(
+            r'Coordinates.cshape should be same as data.cshape[-2:]')
     coords_spherical = coords.get_sph(convention='top_colat')
     phi = coords_spherical[1, :, 0]
     theta = coords_spherical[:, 0, 1]

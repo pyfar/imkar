@@ -60,7 +60,7 @@ def test_surface_sphere_data_preserve_shape_with_different_limits(
     ])
 def test_surface_sphere_nonuniform_data_different_limits(
         phi_0, phi_1, theta_0, theta_1):
-    delta = np.deg2rad(10)
+    delta = np.pi/18
     data, coords = _create_test_data(
         np.arange(phi_0, phi_1+delta, delta),
         np.arange(theta_0, theta_1+delta, delta))
@@ -69,8 +69,10 @@ def test_surface_sphere_nonuniform_data_different_limits(
     data.freq[..., 0] = np.cos(theta)
     result = integrate.surface_sphere(data, coords)
     actual = np.real(result.freq[0, 0])
-    desired = ((-np.cos(2*theta_1)/2) - (-np.cos(2*theta_0)/2)) * (phi_1-phi_0)
-    np.testing.assert_allclose(actual, desired/2, rtol=5e-3, atol=0.02)
+    theta_upper = -np.cos(2*theta_1)/4
+    theta_lower = -np.cos(2*theta_0)/4
+    desired = (theta_upper - theta_lower) * (phi_1 - phi_0)
+    np.testing.assert_allclose(actual, desired, rtol=5e-3, atol=0.04)
 
 
 def test_spherical_warning_wrong_radius():
