@@ -9,7 +9,8 @@ from pyfar import FrequencyData, Coordinates
     ([100, 200]), ([100])])
 def test_freefield_1(frequencies):
     mics = _create_coordinates(
-       np.arange(0, 370, 10), np.arange(0, 100, 10))
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi, num=10))
     p_sample = _create_frequencydata(mics.cshape, 1, frequencies)
     p_reference = _create_frequencydata(mics.cshape, 0, frequencies)
     p_sample.freq[5, 0, :] = 0
@@ -22,7 +23,8 @@ def test_freefield_1(frequencies):
     ([100, 200]), ([100])])
 def test_freefield_wrong_input(frequencies):
     mics = _create_coordinates(
-       np.arange(0, 370, 10), np.arange(0, 100, 10))
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi, num=10))
     p_sample = _create_frequencydata(mics.cshape, 1, frequencies)
     p_reference = _create_frequencydata(mics.cshape, 0, frequencies)
     p_sample.freq[5, 0, :] = 0
@@ -41,7 +43,8 @@ def test_freefield_wrong_input(frequencies):
     ([100, 200]), ([100])])
 def test_freefield_05(frequencies):
     mics = _create_coordinates(
-       np.arange(0, 370, 10), np.arange(0, 100, 10))
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi, num=10))
     p_sample = _create_frequencydata(mics.cshape, 0, frequencies)
     p_reference = _create_frequencydata(mics.cshape, 0, frequencies)
     p_sample.freq[5, 7, :] = 1
@@ -55,7 +58,8 @@ def test_freefield_05(frequencies):
     ([100, 200]), ([100])])
 def test_freefield_0(frequencies):
     mics = _create_coordinates(
-       np.arange(0, 370, 10), np.arange(0, 100, 10))
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi, num=10))
     p_sample = _create_frequencydata(mics.cshape, 0, frequencies)
     p_reference = _create_frequencydata(mics.cshape, 0, frequencies)
     p_reference.freq[5, 0, :] = 1
@@ -69,9 +73,10 @@ def test_freefield_0(frequencies):
     ([100, 200]), ([100])])
 def test_freefield_0_with_inci(frequencies):
     mics = _create_coordinates(
-        np.arange(0, 370, 10), np.arange(0, 100, 10))
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi, num=10))
     incident_directions = _create_coordinates(
-        np.arange(0, 360+30, 30), np.arange(0, 90+30, 30))
+        np.linspace(0, 2*np.pi, num=8), np.linspace(0, np.pi/2, num=4))
     data_shape = np.array((incident_directions.cshape, mics.cshape)).flatten()
     p_sample = _create_frequencydata(data_shape, 0, frequencies)
     p_reference = _create_frequencydata(data_shape, 0, frequencies)
@@ -90,9 +95,10 @@ def test_freefield_0_with_inci(frequencies):
     ([100, 200]), ([100])])
 def test_freefield_1_with_inci(frequencies):
     mics = _create_coordinates(
-        np.arange(0, 370, 10), np.arange(0, 100, 10))
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi, num=19))
     incident_directions = _create_coordinates(
-        np.arange(0, 360+30, 30), np.arange(0, 90+30, 30))
+        np.linspace(0, 2*np.pi, num=8), np.linspace(0, np.pi/2, num=4))
     data_shape = np.array((incident_directions.cshape, mics.cshape)).flatten()
     p_sample = _create_frequencydata(data_shape, 0, frequencies)
     p_reference = _create_frequencydata(data_shape, 0, frequencies)
@@ -111,9 +117,10 @@ def test_freefield_1_with_inci(frequencies):
     ([100, 200]), ([100])])
 def test_freefield_05_with_inci(frequencies):
     mics = _create_coordinates(
-        np.arange(0, 370, 10), np.arange(0, 100, 10))
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi, num=10))
     incident_directions = _create_coordinates(
-        np.arange(0, 360+30, 30), np.arange(0, 90+30, 30))
+        np.linspace(0, 2*np.pi, num=8), np.linspace(0, np.pi/2, num=4))
     data_shape = np.array((incident_directions.cshape, mics.cshape)).flatten()
     p_sample = _create_frequencydata(data_shape, 0, frequencies)
     p_reference = _create_frequencydata(data_shape, 0, frequencies)
@@ -129,16 +136,48 @@ def test_freefield_05_with_inci(frequencies):
     assert s_rand.freq.shape[-1] == len(frequencies)
 
 
-def _create_coordinates(phi_deg, theta_deg):
-    phi, theta = np.meshgrid(phi_deg, theta_deg)
+@pytest.mark.parametrize("s_value",  [
+    (0), (0.2), (0.5), (0.8), (1)])
+@pytest.mark.parametrize("frequencies",  [
+    ([100, 200]), ([100])])
+def test_random_incidence_constant_s(s_value, frequencies):
+    incident_directions = _create_coordinates(
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi/2, num=10))
+    s = _create_frequencydata(incident_directions.cshape, s_value, frequencies)
+    s_rand = scattering.coefficient.random_incidence(s, incident_directions)
+    np.testing.assert_allclose(s_rand.freq, s_value)
+
+
+@pytest.mark.parametrize("frequencies",  [
+    ([100, 200]), ([100])])
+def test_random_incidence_non_constant_s(frequencies):
+    incident_directions = _create_coordinates(
+        np.linspace(0, 2*np.pi, num=37),
+        np.linspace(0, np.pi/2, num=10))
+    s_value = np.arange(37*10).reshape(incident_directions.cshape) / 370
+    sph = incident_directions.get_sph()
+    actual_weight = np.sin(2*sph[..., 1])   # sin(2*theta)
+    actual_weight /= np.sum(actual_weight)
+    s = _create_frequencydata(incident_directions.cshape, s_value, frequencies)
+    s_rand = scattering.coefficient.random_incidence(s, incident_directions)
+    desired = np.sum(s_value*actual_weight)
+    np.testing.assert_allclose(s_rand.freq, desired)
+
+
+def _create_coordinates(phi_rad, theta_rad):
+    phi, theta = np.meshgrid(phi_rad, theta_rad)
     coords = Coordinates(
-        phi, theta, np.ones(phi.shape), 'sph', 'top_colat', 'deg')
+        phi, theta, np.ones(phi.shape), 'sph')
     return coords
 
 
-def _create_frequencydata(shape, value, frequencies):
+def _create_frequencydata(shape, data_raw, frequencies):
     frequencies = np.atleast_1d(frequencies)
     shape_new = np.append(shape, frequencies.shape)
-    data = np.zeros(shape_new) + value
+    if hasattr(data_raw, "__len__"):
+        data_raw = np.repeat(
+            data_raw[..., np.newaxis], len(frequencies), axis=-1)
+    data = np.zeros(shape_new) + data_raw
     p_reference = FrequencyData(data, frequencies)
     return p_reference

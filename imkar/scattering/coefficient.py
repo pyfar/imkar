@@ -68,13 +68,36 @@ def freefield(p_sample, p_reference, mics, incident_directions=None):
 
     # calculate random-incidence scattering coefficient
     if incident_directions is not None:
-        sph = incident_directions.get_sph()
-        theta = sph[..., 1, None]
-        weight = np.sin(2*theta)  # sin(2*theta)
-        norm = np.sum(weight)
-        s_rand = s*weight/norm
-        s_rand.freq = np.sum(s_rand.freq, axis=-2)
-        s_rand.freq = np.sum(s_rand.freq, axis=-2)
-        s_rand.comment = 'random-incidence scattering coefficient'
+        s_rand = random_incidence(s, incident_directions)
         return s, s_rand
     return s
+
+
+def random_incidence(s, incident_directions):
+    """This function claculates the random-incidence scattering coefficient
+    according to Paris formula.
+
+    Parameters
+    ----------
+    s : FrequencyData
+        The scattering coefficient for each plane wave direction. Its cshape
+        need to be (..., #theta, #phi)
+    incident_directions : Coordinates
+        A Coordinate object with all incident directions. Its cshape need to
+        be (#theta, #phi).
+
+
+    Returns
+    -------
+    s_rand : FrequencyData
+        The random-incidence scattering coefficient.
+    """
+    sph = incident_directions.get_sph()
+    theta = sph[..., 1, None]
+    weight = np.sin(2*theta)  # sin(2*theta)
+    norm = np.sum(weight)
+    s_rand = s*weight/norm
+    s_rand.freq = np.sum(s_rand.freq, axis=-2)
+    s_rand.freq = np.sum(s_rand.freq, axis=-2)
+    s_rand.comment = 'random-incidence scattering coefficient'
+    return s_rand
