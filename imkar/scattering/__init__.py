@@ -2,4 +2,5 @@ from . import coefficient
 
 __all__ = [
     'freefield',
-    'random_incidence']
+    'random_incidence',
+    'diffuse']

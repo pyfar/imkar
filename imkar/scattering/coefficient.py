@@ -3,6 +3,11 @@ import pyfar as pf
 from imkar import integrate
 
 
+def diffuse(
+    rt, t, rh, alphaMode='Eyring', scaleFactor = 5, sampleArea=np.pi*0.4^2,
+    S_room=9.05, V_room=1.67):
+    pass
+
 def freefield(p_sample, p_reference, mics, incident_directions=None):
     """
     This function calculates the free-field scattering coefficient using the
