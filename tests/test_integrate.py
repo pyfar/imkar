@@ -2,7 +2,6 @@ import pytest
 import numpy as np
 
 from imkar import integrate
-from pyfar import FrequencyData, Coordinates
 from imkar.testing import stub_utils
 
 

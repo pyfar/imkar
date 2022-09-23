@@ -26,12 +26,9 @@ def create_const_frequencydata_from_shape(shape, value, frequencies):
 
 def create_frequencydata_from_shape(shape, data_raw, frequencies):
     frequencies = np.atleast_1d(frequencies)
-
     if len(shape) > 0:
-        shape_new = np.append(shape, frequencies.shape)
         for dim in shape:
             data_raw = np.repeat(data_raw[..., np.newaxis], dim, axis=-1)
     data_raw = np.repeat(data_raw[..., np.newaxis], len(frequencies), axis=-1)
-    # data = np.zeros(shape_new) + data_raw
     p_reference = pf.FrequencyData(data_raw, frequencies)
     return p_reference
