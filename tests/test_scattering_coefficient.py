@@ -2,7 +2,6 @@ import pytest
 import numpy as np
 
 from imkar import scattering
-from pyfar import FrequencyData, Coordinates
 from imkar.testing import stub_utils
 
 
@@ -164,4 +163,3 @@ def test_random_incidence_non_constant_s(
     s_rand = scattering.coefficient.random_incidence(s, incident_directions)
     desired = np.sum(s_value*actual_weight)
     np.testing.assert_allclose(s_rand.freq, desired)
-

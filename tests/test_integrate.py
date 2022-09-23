@@ -100,4 +100,3 @@ def test_surface_sphere_error_invalid_coordinates_shape(coords_sphere_10_deg):
     coords.set_sph(sph[..., 0], sph[..., 1], sph[..., 2])
     with pytest.raises(ValueError, match='Coordinates.cshape'):
         integrate.surface_sphere(data, coords)
-
