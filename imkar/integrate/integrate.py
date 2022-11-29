@@ -45,7 +45,12 @@ def surface_sphere(data, coords):
             r'Coordinates.cshape should be same as data.cshape[-2:]')
     coords_spherical = coords.get_sph(convention='top_colat')
     phi = coords_spherical[1, :, 0]
-    theta = coords_spherical[:, 0, 1]
+    theta = coords_spherical[:, 1, 1]
+    axis_index = -2
+    if np.sum(np.diff(phi[1:-2])) < 1e-3:
+        phi = coords_spherical[:, 1, 0]
+        theta = coords_spherical[1, :, 1]
+        axis_index = -3
     radius = coords_spherical[:, :, 2]
     r_mean = np.mean(radius)
     if not np.allclose(radius, r_mean):
@@ -55,7 +60,7 @@ def surface_sphere(data, coords):
     if last_close_to_0 and pi2_consistant:
         phi[-1] = 2*np.pi
     weights = np.transpose(np.atleast_2d(np.sin(theta)))
-    result_raw = trapezoid(data.freq, x=phi, axis=-2)
+    result_raw = trapezoid(np.abs(data.freq), x=phi, axis=axis_index)
     result_raw1 = trapezoid(result_raw*weights, x=theta, axis=-2)
     result = data.copy()
     result.freq = result_raw1
