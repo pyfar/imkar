@@ -8,7 +8,7 @@ import numpy as np
 import pyfar as pf
 
 
-def create_coordinates_sph(phi_rad, theta_rad, r=1):
+def spherical_coordinates(phi_rad, theta_rad, r=1):
     phi, theta = np.meshgrid(phi_rad, theta_rad)
     coords = pf.Coordinates(
         phi, theta, np.ones(phi.shape)*r, 'sph')
