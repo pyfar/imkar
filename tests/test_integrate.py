@@ -16,7 +16,7 @@ from imkar.testing import stub_utils
 def test_surface_sphere_uniform_data_different_limits(
         phi_0, phi_1, theta_0, theta_1, desired):
     delta = np.deg2rad(10)
-    coords = stub_utils.create_coordinates_sph(
+    coords = stub_utils.spherical_coordinates(
         np.arange(phi_0, phi_1+delta, delta),
         np.arange(theta_0, theta_1+delta, delta))
     data = stub_utils.frequencydata_from_shape(
@@ -39,7 +39,7 @@ def test_surface_sphere_data_preserve_shape_with_different_limits(
         phi_0, phi_1, theta_0, theta_1, desired):
     delta = np.deg2rad(10)
     data_raw = np.arange(1, 7).reshape(2, 3)
-    coords = stub_utils.create_coordinates_sph(
+    coords = stub_utils.spherical_coordinates(
         np.arange(phi_0, phi_1+delta, delta),
         np.arange(theta_0, theta_1+delta, delta))
     data = stub_utils.frequencydata_from_shape(coords.cshape, data_raw, 100)
@@ -61,7 +61,7 @@ def test_surface_sphere_data_preserve_shape_with_different_limits(
 def test_surface_sphere_nonuniform_data_different_limits(
         phi_0, phi_1, theta_0, theta_1, desired):
     delta = np.pi/18
-    coords = stub_utils.create_coordinates_sph(
+    coords = stub_utils.spherical_coordinates(
         np.arange(phi_0, phi_1+delta, delta),
         np.arange(theta_0, theta_1+delta, delta))
     data = stub_utils.frequencydata_from_shape(coords.cshape, 1, 100)
