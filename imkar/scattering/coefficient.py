@@ -3,35 +3,33 @@ import pyfar as pf
 from imkar import integrate
 
 
-def freefield(p_sample, p_reference, mics, incident_directions=None):
+def freefield(sample_pressure, reference_pressure, mic_positions):
     """
-    Calculate the free-field scattering coefficient using the
-    Mommertz correlation method [#]_.
+    Calculate the free-field scattering coefficient for each incident direction
+    using the Mommertz correlation method [#]_. See :py:func:`random_incidence`
+    to calculate the random incidence scattering coefficient.
+
 
     Parameters
     ----------
     sample_pressure : FrequencyData
-        Reflection sound pressure or directivity of the test sample. Its cshape
-        need to be (..., #theta_incident_directions, #phi_incident_directions,
-        #theta_mics, #phi_mics)
+        Reflected sound pressure or directivity of the test sample. Its cshape
+        need to be (..., #theta_incident_positions, #phi_incident_positions,
+        #angle1, #angle2)
     reference_pressure : FrequencyData
         Reflection Reflection sound pressure or directivity of the test
-        reference sample. It has the same shape as `p_sample`.
+        reference sample. It has the same shape as `sample_pressure`.
     mic_positions : Coordinates
-        A Coordinate object with all microphone directions. Its cshape need to
-        be (#theta_mics, #phi_mics)
-    incident_directions : Coordinates, optinal
-        A Coordinate object with all incident directions. Its cshape need to
-        be (#theta_incident, #phi_incident). This input is optinal, if it is
-        the random-incidence scattering coefficient can be calculated.
+        A Coordinate object with all microphone positions. Its cshape need to
+        be (#angle1, #angle2). In sperical coordinates the radii need to
+        be constant. It need to be same for `sample_pressure` and
+        `reference_pressure`.
 
     Returns
     -------
     scattering_coefficients : FrequencyData
         The scattering coefficient for each plane wave direction.
-    s_rand : FrequencyData, optional
-        The random-incidence scattering coefficient. Is just retruned if the
-        incident_directions are given.
+
 
     References
     ----------
@@ -40,51 +38,62 @@ def freefield(p_sample, p_reference, mics, incident_directions=None):
             Acoustics, Bd. 60, Nr. 2, S. 201–203, Juni 2000,
             doi: 10.1016/S0003-682X(99)00057-2.
 
+    Examples
+    --------
+    Read signal and orientations objects stored in a .far file.
+
+    >>> import imkar
+    >>> scattering_coefficients = imkar.scattering.coefficient.freefield(
+    >>>     sample_pressure, reference_pressure, mic_positions)
+    >>> random_s = imkar.scattering.coefficient.random_incidence(
+    >>>     scattering_coefficients, incident_positions)
     """
     # check inputs
-    if not isinstance(p_sample, pf.FrequencyData):
-        raise ValueError("p_sample has to be FrequencyData")
-    if not isinstance(p_reference, pf.FrequencyData):
-        raise ValueError("p_reference has to be FrequencyData")
-    if not isinstance(mics, pf.Coordinates):
-        raise ValueError("mics have to be Coordinates")
-    if (incident_directions is not None) & \
-            ~isinstance(incident_directions, pf.Coordinates):
-        raise ValueError("incident_directions have to be None or Coordinates")
+    if not isinstance(sample_pressure, pf.FrequencyData):
+        raise ValueError("sample_pressure has to be FrequencyData")
+    if not isinstance(reference_pressure, pf.FrequencyData):
+        raise ValueError("reference_pressure has to be FrequencyData")
+    if not isinstance(mic_positions, pf.Coordinates):
+        raise ValueError("microphone positions have to be Coordinates")
 
-    # calculate according to mommertz correlation method
-    p_sample_sq = p_sample*p_sample
-    p_reference_sq = p_reference*p_reference
-    p_reference_conj = p_reference.copy()
-    p_reference_conj.freq = np.conj(p_reference_conj.freq)
-    p_cross = p_sample*p_reference_conj
+    # calculate according to mommertz correlation method Equation (5)
+    p_sample_abs = pf.FrequencyData(
+        np.abs(sample_pressure.freq), sample_pressure.frequencies)
+    p_reference_abs = pf.FrequencyData(
+        np.abs(reference_pressure.freq), reference_pressure.frequencies)
+    p_sample_sq = p_sample_abs*p_sample_abs
+    p_reference_sq = p_reference_abs*p_reference_abs
+    p_reference_conj = pf.FrequencyData(
+        np.conj(reference_pressure.freq), reference_pressure.frequencies)
+    p_cross = sample_pressure*p_reference_conj
 
-    p_sample_sum = integrate.surface_sphere(p_sample_sq, mics)
-    p_ref_sum = integrate.surface_sphere(p_reference_sq, mics)
-    p_cross_sum = integrate.surface_sphere(p_cross, mics)
+    p_sample_sum = integrate.surface_sphere(p_sample_sq, mic_positions)
+    p_ref_sum = integrate.surface_sphere(p_reference_sq, mic_positions)
+    p_cross_sum = integrate.surface_sphere(p_cross, mic_positions)
+    p_cross_sum_abs = pf.FrequencyData(
+        np.abs(p_cross_sum.freq), p_cross_sum.frequencies)
+        
+    scattering_coefficients \
+        = 1 - ((p_cross_sum_abs**2)/(p_sample_sum*p_ref_sum))
+    scattering_coefficients.comment = 'scattering coefficient'
 
-    s = 1 - ((p_cross_sum*p_cross_sum)/(p_sample_sum*p_ref_sum))
-    s.comment = 'scattering coefficient'
-
-    # calculate random-incidence scattering coefficient
-    if incident_directions is not None:
-        s_rand = random_incidence(s, incident_directions)
-        return s, s_rand
-    return s
+    return scattering_coefficients
 
 
-def random_incidence(s, incident_directions):
+def random_incidence(scattering_coefficient, incident_positions):
     """Calculate the random-incidence scattering coefficient
-    according to Paris formula.
+    according to Paris formula. Note that the incident directions should be
+    equally distributed to get a valid result.
 
     Parameters
     ----------
     scattering_coefficient : FrequencyData
         The scattering coefficient for each plane wave direction. Its cshape
-        need to be (..., #theta, #phi)
-    incident_directions : Coordinates
-        A Coordinate object with all incident directions. Its cshape need to
-        be (#theta, #phi).
+        need to be (..., #angle1, #angle2)
+    incident_positions : Coordinates
+        Defines the incidence directions of each `scattering_coefficient` in a
+        Coordinates object. Its cshape need to be (#angle1, #angle2). In
+        sperical coordinates the radii  need to be constant.
 
 
     Returns
@@ -92,11 +101,17 @@ def random_incidence(s, incident_directions):
     s_rand : FrequencyData
         The random-incidence scattering coefficient.
     """
-    sph = incident_directions.get_sph()
+    if not isinstance(scattering_coefficient, pf.FrequencyData):
+        raise ValueError("scattering_coefficient has to be FrequencyData")
+    if (incident_positions is not None) & \
+            ~isinstance(incident_positions, pf.Coordinates):
+        raise ValueError("incident_positions have to be None or Coordinates")
+
+    sph = incident_positions.get_sph()
     theta = sph[..., 1]
     weight = np.sin(2*theta)  # sin(2*theta)
     norm = np.sum(weight)
-    s_rand = s*weight/norm
+    s_rand = scattering_coefficient*weight/norm
     s_rand.freq = np.sum(s_rand.freq, axis=-2)
     s_rand.freq = np.sum(s_rand.freq, axis=-2)
     s_rand.comment = 'random-incidence scattering coefficient'

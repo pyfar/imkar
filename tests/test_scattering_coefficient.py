@@ -29,14 +29,12 @@ def test_freefield_wrong_input(frequencies, coords_half_sphere_10_deg):
         mics.cshape, 0, frequencies)
     p_sample.freq[5, 0, :] = 0
     p_reference.freq[5, 0, :] = np.sum(p_sample.freq.flatten())/2
-    with pytest.raises(ValueError, match='p_sample'):
+    with pytest.raises(ValueError, match='sample_pressure'):
         scattering.coefficient.freefield(1, p_reference, mics)
-    with pytest.raises(ValueError, match='p_reference'):
-        scattering.coefficient.freefield(p_sample, 1, mics, mics)
-    with pytest.raises(ValueError, match='mics'):
-        scattering.coefficient.freefield(p_sample, p_reference, 1, mics)
-    with pytest.raises(ValueError, match='incident_directions'):
-        scattering.coefficient.freefield(p_sample, p_reference, mics, 1)
+    with pytest.raises(ValueError, match='reference_pressure'):
+        scattering.coefficient.freefield(p_sample, 1, mics)
+    with pytest.raises(ValueError, match='microphone positions'):
+        scattering.coefficient.freefield(p_sample, p_reference, 1)
 
 
 @pytest.mark.parametrize("frequencies",  [
@@ -82,8 +80,8 @@ def test_freefield_0_with_inci(
         data_shape, 0, frequencies)
     p_reference.freq[:, :, 1, 2, :] = 1
     p_sample.freq[:, :, 1, 2, :] = 1
-    s, s_rand = scattering.coefficient.freefield(
-        p_sample, p_reference, mics, incident_directions=incident_directions)
+    s = scattering.coefficient.freefield(p_sample, p_reference, mics)
+    s_rand = scattering.coefficient.random_incidence(s, incident_directions)
     np.testing.assert_allclose(s.freq, 0)
     np.testing.assert_allclose(s_rand.freq, 0)
     assert s.freq.shape[-1] == len(frequencies)
@@ -104,8 +102,8 @@ def test_freefield_1_with_inci(
         data_shape, 0, frequencies)
     p_reference.freq[:, :, 1, 2, :] = 1
     p_sample.freq[:, :, 2, 3, :] = 1
-    s, s_rand = scattering.coefficient.freefield(
-        p_sample, p_reference, mics, incident_directions=incident_directions)
+    s = scattering.coefficient.freefield(p_sample, p_reference, mics)
+    s_rand = scattering.coefficient.random_incidence(s, incident_directions)
     np.testing.assert_allclose(s.freq, 1)
     np.testing.assert_allclose(s_rand.freq, 1)
     assert s.freq.shape[-1] == len(frequencies)
@@ -127,8 +125,8 @@ def test_freefield_05_with_inci(
     p_sample.freq[:, :, 5, 7, :] = 1
     p_sample.freq[:, :, 5, 5, :] = 1
     p_reference.freq[:, :, 5, 5, :] = 1
-    s, s_rand = scattering.coefficient.freefield(
-        p_sample, p_reference, mics, incident_directions=incident_directions)
+    s = scattering.coefficient.freefield(p_sample, p_reference, mics)
+    s_rand = scattering.coefficient.random_incidence(s, incident_directions)
     np.testing.assert_allclose(s.freq, 0.5)
     np.testing.assert_allclose(s_rand.freq, 0.5)
     assert s.freq.shape[-1] == len(frequencies)
