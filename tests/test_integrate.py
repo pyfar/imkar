@@ -3,7 +3,6 @@ import numpy as np
 
 from imkar import integrate
 from imkar.testing import stub_utils
-import pyfar as pf
 
 @pytest.mark.parametrize(
     "   phi_0,      phi_1,      theta_0,    theta_1,    desired",  [
