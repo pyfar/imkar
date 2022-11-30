@@ -17,7 +17,7 @@ test_requirements = ['pytest>=3', ]
 setup(
     author="The pyfar developers",
     author_email='info@pyfar.org',
-    python_requires='>=3.6',
+    python_requires='>=3.8',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Scientists',
@@ -28,7 +28,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    description="A python package for mmaterial  modeling and quantification in acoustics.",
+    description="A python package for material modeling and quantification in acoustics.",
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
