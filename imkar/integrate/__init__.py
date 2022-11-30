@@ -1,4 +1,6 @@
-from .integrate import (surface_sphere)
+from .integrate import (
+    surface_sphere
+    )
 
 
 __all__ = [

@@ -5,4 +5,4 @@ __email__ = 'info@pyfar.org'
 __version__ = '0.1.0'
 
 
-from . import integrate
+from . import integrate  # noqa
