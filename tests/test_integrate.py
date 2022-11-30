@@ -4,6 +4,7 @@ import numpy as np
 from imkar import integrate
 from imkar.testing import stub_utils
 
+
 @pytest.mark.parametrize(
     "   phi_0,      phi_1,      theta_0,    theta_1,    desired",  [
         (0,         2*np.pi,    0,          np.pi,       4*np.pi),
