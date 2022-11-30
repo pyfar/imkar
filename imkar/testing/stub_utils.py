@@ -5,7 +5,6 @@ Stubs are used instead of pyfar objects for testing functions that have pyfar
 objects as input arguments. This makes testing such functions independent from
 the pyfar objects themselves and helps to find bugs.
 """
-import collections.abc
 import numpy as np
 import pyfar as pf
 

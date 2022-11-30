@@ -1,6 +1,5 @@
 import pytest
 import numpy as np
-import pyfar as pf
 from imkar.testing import stub_utils
 
 
