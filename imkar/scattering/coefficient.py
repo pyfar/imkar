@@ -40,7 +40,8 @@ def freefield(sample_pressure, reference_pressure, mic_positions):
 
     Examples
     --------
-    Read signal and orientations objects stored in a .far file.
+    Calculate freefield scattering coefficients and then the random incidence
+    scattering coefficient.
 
     >>> import imkar
     >>> scattering_coefficients = imkar.scattering.coefficient.freefield(
@@ -72,7 +73,7 @@ def freefield(sample_pressure, reference_pressure, mic_positions):
     p_cross_sum = integrate.surface_sphere(p_cross, mic_positions)
     p_cross_sum_abs = pf.FrequencyData(
         np.abs(p_cross_sum.freq), p_cross_sum.frequencies)
-        
+
     scattering_coefficients \
         = 1 - ((p_cross_sum_abs**2)/(p_sample_sum*p_ref_sum))
     scattering_coefficients.comment = 'scattering coefficient'
@@ -95,10 +96,9 @@ def random_incidence(scattering_coefficient, incident_positions):
         Coordinates object. Its cshape need to be (#angle1, #angle2). In
         sperical coordinates the radii  need to be constant.
 
-
     Returns
     -------
-    s_rand : FrequencyData
+    random_scattering : FrequencyData
         The random-incidence scattering coefficient.
     """
     if not isinstance(scattering_coefficient, pf.FrequencyData):
@@ -111,8 +111,8 @@ def random_incidence(scattering_coefficient, incident_positions):
     theta = sph[..., 1]
     weight = np.sin(2*theta)  # sin(2*theta)
     norm = np.sum(weight)
-    s_rand = scattering_coefficient*weight/norm
-    s_rand.freq = np.sum(s_rand.freq, axis=-2)
-    s_rand.freq = np.sum(s_rand.freq, axis=-2)
-    s_rand.comment = 'random-incidence scattering coefficient'
-    return s_rand
+    random_scattering = scattering_coefficient*weight/norm
+    random_scattering.freq = np.sum(random_scattering.freq, axis=-2)
+    random_scattering.freq = np.sum(random_scattering.freq, axis=-2)
+    random_scattering.comment = 'random-incidence scattering coefficient'
+    return random_scattering
