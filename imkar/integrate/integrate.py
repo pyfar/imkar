@@ -1,6 +1,7 @@
 import warnings
 from scipy.integrate import trapezoid
 import numpy as np
+import pyfar as pf
 
 
 def surface_sphere(data, coords):
@@ -12,11 +13,12 @@ def surface_sphere(data, coords):
 
     Parameters
     ----------
-    data : FrequencyData
-        Input data to integrate. Its cshape need to be (..., #theta, #phi)
+    data : FrequencyData, Signal
+        Input data to integrate. Its `cshape` needs to be (..., #theta, #phi)
+        or (..., #phi, #theta).
     coords : Coordinates
         Coordinate points at which the data is sampled. Its cshape needs to be
-        (#theta, #phi), matching the cshape of `data`.
+        (#theta, #phi) or (#phi, #theta), matching the cshape of `data`.
 
     Returns
     -------
@@ -40,23 +42,36 @@ def surface_sphere(data, coords):
     >>> result.freq
     array([[12.56605162+0.j]])
     """
+
     if coords.cshape != data.cshape[-2:]:
         raise ValueError(
-            r'Coordinates.cshape should be same as data.cshape[-2:]')
+            f'Coordinates.cshape should be same as {data.cshape[-2:]}')
+
+    # parse angles
     coords_spherical = coords.get_sph(convention='top_colat')
     phi = coords_spherical[1, :, 0]
-    theta = coords_spherical[:, 0, 1]
+    theta = coords_spherical[:, 1, 1]
+    axis_index = -2
+    if np.sum(np.diff(phi[1:-2])) < 1e-3:
+        phi = coords_spherical[:, 1, 0]
+        theta = coords_spherical[1, :, 1]
+        axis_index = -3
     radius = coords_spherical[:, :, 2]
     r_mean = np.mean(radius)
     if not np.allclose(radius, r_mean):
         warnings.warn(r'all radii should be almost same')
-    last_close_to_0 = np.isclose(phi[-1], 0, atol=1e-16)
-    pi2_consistant = np.isclose(phi[-2]+np.diff(phi)[0], 2*np.pi, atol=1e-16)
-    if last_close_to_0 and pi2_consistant:
+
+    # pf.Coordinates turns phi = 2*pi to 0, due to cylindircal
+    # for the integration the upper limit cannot be zero but 2pi
+    last_phi_is_zero = np.isclose(phi[-1], 0, atol=1e-16)
+    increasing_phi_to_2pi = np.isclose(
+        phi[-2]+np.diff(phi)[0], 2*np.pi, atol=1e-16)
+    if last_phi_is_zero and increasing_phi_to_2pi:
         phi[-1] = 2*np.pi
+
+    # integrate over angles with wight for sperical integration
     weights = np.transpose(np.atleast_2d(np.sin(theta)))
-    result_raw = trapezoid(data.freq, x=phi, axis=-2)
+    result_raw = trapezoid(np.abs(data.freq), x=phi, axis=axis_index)
     result_raw1 = trapezoid(result_raw*weights, x=theta, axis=-2)
-    result = data.copy()
-    result.freq = result_raw1
-    return result
+
+    return pf.FrequencyData(result_raw1, data.frequencies)

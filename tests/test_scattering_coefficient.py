@@ -9,9 +9,9 @@ from imkar.testing import stub_utils
     ([100, 200]), ([100])])
 def test_freefield_1(frequencies, coords_half_sphere_10_deg):
     mics = coords_half_sphere_10_deg
-    p_sample = stub_utils.create_const_frequencydata_from_shape(
+    p_sample = stub_utils.frequencydata_from_shape(
         mics.cshape, 1, frequencies)
-    p_reference = stub_utils.create_const_frequencydata_from_shape(
+    p_reference = stub_utils.frequencydata_from_shape(
         mics.cshape, 0, frequencies)
     p_sample.freq[5, 0, :] = 0
     p_reference.freq[5, 0, :] = np.sum(p_sample.freq.flatten())/2
@@ -23,9 +23,9 @@ def test_freefield_1(frequencies, coords_half_sphere_10_deg):
     ([100, 200]), ([100])])
 def test_freefield_wrong_input(frequencies, coords_half_sphere_10_deg):
     mics = coords_half_sphere_10_deg
-    p_sample = stub_utils.create_const_frequencydata_from_shape(
+    p_sample = stub_utils.frequencydata_from_shape(
         mics.cshape, 1, frequencies)
-    p_reference = stub_utils.create_const_frequencydata_from_shape(
+    p_reference = stub_utils.frequencydata_from_shape(
         mics.cshape, 0, frequencies)
     p_sample.freq[5, 0, :] = 0
     p_reference.freq[5, 0, :] = np.sum(p_sample.freq.flatten())/2
@@ -43,9 +43,9 @@ def test_freefield_wrong_input(frequencies, coords_half_sphere_10_deg):
     ([100, 200]), ([100])])
 def test_freefield_05(frequencies, coords_half_sphere_10_deg):
     mics = coords_half_sphere_10_deg
-    p_sample = stub_utils.create_const_frequencydata_from_shape(
+    p_sample = stub_utils.frequencydata_from_shape(
         mics.cshape, 0, frequencies)
-    p_reference = stub_utils.create_const_frequencydata_from_shape(
+    p_reference = stub_utils.frequencydata_from_shape(
         mics.cshape, 0, frequencies)
     p_sample.freq[5, 7, :] = 1
     p_sample.freq[5, 5, :] = 1
@@ -58,9 +58,9 @@ def test_freefield_05(frequencies, coords_half_sphere_10_deg):
     ([100, 200]), ([100])])
 def test_freefield_0(frequencies, coords_half_sphere_10_deg):
     mics = coords_half_sphere_10_deg
-    p_sample = stub_utils.create_const_frequencydata_from_shape(
+    p_sample = stub_utils.frequencydata_from_shape(
         mics.cshape, 0, frequencies)
-    p_reference = stub_utils.create_const_frequencydata_from_shape(
+    p_reference = stub_utils.frequencydata_from_shape(
         mics.cshape, 0, frequencies)
     p_reference.freq[5, 0, :] = 1
     p_sample.freq[5, 0, :] = 1
@@ -76,9 +76,9 @@ def test_freefield_0_with_inci(
     mics = coords_half_sphere_10_deg
     incident_directions = coords_half_sphere_30_deg
     data_shape = np.array((incident_directions.cshape, mics.cshape)).flatten()
-    p_sample = stub_utils.create_const_frequencydata_from_shape(
+    p_sample = stub_utils.frequencydata_from_shape(
         data_shape, 0, frequencies)
-    p_reference = stub_utils.create_const_frequencydata_from_shape(
+    p_reference = stub_utils.frequencydata_from_shape(
         data_shape, 0, frequencies)
     p_reference.freq[:, :, 1, 2, :] = 1
     p_sample.freq[:, :, 1, 2, :] = 1
@@ -98,9 +98,9 @@ def test_freefield_1_with_inci(
     mics = coords_half_sphere_10_deg
     incident_directions = coords_half_sphere_30_deg
     data_shape = np.array((incident_directions.cshape, mics.cshape)).flatten()
-    p_sample = stub_utils.create_const_frequencydata_from_shape(
+    p_sample = stub_utils.frequencydata_from_shape(
         data_shape, 0, frequencies)
-    p_reference = stub_utils.create_const_frequencydata_from_shape(
+    p_reference = stub_utils.frequencydata_from_shape(
         data_shape, 0, frequencies)
     p_reference.freq[:, :, 1, 2, :] = 1
     p_sample.freq[:, :, 2, 3, :] = 1
@@ -120,9 +120,9 @@ def test_freefield_05_with_inci(
     mics = coords_half_sphere_10_deg
     incident_directions = coords_half_sphere_30_deg
     data_shape = np.array((incident_directions.cshape, mics.cshape)).flatten()
-    p_sample = stub_utils.create_const_frequencydata_from_shape(
+    p_sample = stub_utils.frequencydata_from_shape(
         data_shape, 0, frequencies)
-    p_reference = stub_utils.create_const_frequencydata_from_shape(
+    p_reference = stub_utils.frequencydata_from_shape(
         data_shape, 0, frequencies)
     p_sample.freq[:, :, 5, 7, :] = 1
     p_sample.freq[:, :, 5, 5, :] = 1
@@ -143,7 +143,7 @@ def test_freefield_05_with_inci(
 def test_random_incidence_constant_s(
         s_value, frequencies, coords_half_sphere_10_deg):
     incident_directions = coords_half_sphere_10_deg
-    s = stub_utils.create_const_frequencydata_from_shape(
+    s = stub_utils.frequencydata_from_shape(
         incident_directions.cshape, s_value, frequencies)
     s_rand = scattering.coefficient.random_incidence(s, incident_directions)
     np.testing.assert_allclose(s_rand.freq, s_value)
@@ -158,7 +158,7 @@ def test_random_incidence_non_constant_s(
     sph = incident_directions.get_sph()
     actual_weight = np.sin(2*sph[..., 1])   # sin(2*theta)
     actual_weight /= np.sum(actual_weight)
-    s = stub_utils.create_frequencydata_from_shape(
+    s = stub_utils.frequencydata_from_shape(
         [], s_value, frequencies)
     s_rand = scattering.coefficient.random_incidence(s, incident_directions)
     desired = np.sum(s_value*actual_weight)

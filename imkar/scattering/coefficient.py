@@ -93,7 +93,7 @@ def random_incidence(s, incident_directions):
         The random-incidence scattering coefficient.
     """
     sph = incident_directions.get_sph()
-    theta = sph[..., 1, None]
+    theta = sph[..., 1]
     weight = np.sin(2*theta)  # sin(2*theta)
     norm = np.sum(weight)
     s_rand = s*weight/norm
