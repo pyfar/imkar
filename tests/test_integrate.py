@@ -49,28 +49,6 @@ def test_surface_sphere_data_preserve_shape_with_different_limits(
     np.testing.assert_allclose(actual, data_raw*desired, rtol=5e-3)
 
 
-@pytest.mark.parametrize(
-    "   phi_0,      phi_1,      theta_0,    theta_1,    desired",  [
-        (0,         2*np.pi,    0,          np.pi,      4*np.pi),
-        (0,         np.pi,      0,          np.pi,      4*np.pi/2),
-        (0,         np.pi,      0,          np.pi/2,    4*np.pi/4),
-        (np.pi,     2*np.pi,    0,          np.pi/2,    4*np.pi/4),
-        (np.pi-.1,  2*np.pi-.1, 0,          np.pi/2,    4*np.pi/4),
-        (0,         2*np.pi,    np.pi/2,    np.pi,      4*np.pi/2),
-        (np.pi-.1,  2*np.pi-.1, 0,          np.pi,      4*np.pi/2),
-    ])
-def test_surface_sphere_uniform_data_different_limits(
-        phi_0, phi_1, theta_0, theta_1, desired):
-    delta = np.pi/18
-    coords = stub_utils.spherical_coordinates(
-        np.arange(phi_0, phi_1+delta, delta),
-        np.arange(theta_0, theta_1+delta, delta))
-    data = stub_utils.frequencydata_from_shape(coords.cshape, 1, 100)
-    result = integrate.surface_sphere(data, coords)
-    actual = np.real(result.freq[0, 0])
-    np.testing.assert_allclose(actual, desired, rtol=5e-3, atol=0.04)
-
-
 def test_spherical_warning_wrong_radius(coords_sphere_10_deg):
     coords = coords_sphere_10_deg
     data = stub_utils.frequencydata_from_shape(coords.cshape, 1, 100)
