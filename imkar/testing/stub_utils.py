@@ -1,6 +1,5 @@
 """
 Contains tools to easily generate stubs for the most common pyfar Classes.
-
 Stubs are used instead of pyfar objects for testing functions that have pyfar
 objects as input arguments. This makes testing such functions independent from
 the pyfar objects themselves and helps to find bugs.
