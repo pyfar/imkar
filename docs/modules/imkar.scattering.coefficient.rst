@@ -1,5 +1,5 @@
 imkar.scattering.coefficient
-=============
+============================
 
 .. automodule:: imkar.scattering.coefficient
    :members:
