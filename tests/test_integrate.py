@@ -3,7 +3,6 @@ import numpy as np
 
 from imkar import integrate
 from imkar.testing import stub_utils
-import pyfar as pf
 
 
 @pytest.mark.parametrize(
