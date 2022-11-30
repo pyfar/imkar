@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 
 from imkar import integrate
-from pyfar import FrequencyData, Coordinates
+import pyfar as pf
 
 
 @pytest.mark.parametrize(
@@ -95,7 +95,7 @@ def test_surface_sphere_error_invalid_coordinates_shape():
 
 def _create_test_data(phi_rad, theta_rad, data_raw=None, n_bins=1, radius=1):
     phi, theta = np.meshgrid(phi_rad, theta_rad)
-    coords = Coordinates(
+    coords = pf.Coordinates(
         phi, theta, np.ones(phi.shape)*radius, 'sph')
     if data_raw is None:
         data_raw = np.ones((1))
@@ -103,5 +103,5 @@ def _create_test_data(phi_rad, theta_rad, data_raw=None, n_bins=1, radius=1):
         data_raw = np.repeat(data_raw[..., np.newaxis], dim, axis=-1)
     data_raw = np.repeat(data_raw[..., np.newaxis], n_bins, axis=-1)
     freq_data = np.arange(1, n_bins+1)*100
-    data = FrequencyData(data_raw, freq_data)
+    data = pf.FrequencyData(data_raw, freq_data)
     return data, coords
