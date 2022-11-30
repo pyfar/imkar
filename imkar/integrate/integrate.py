@@ -13,7 +13,7 @@ def surface_sphere(data, coords):
 
     Parameters
     ----------
-    data : FrequencyData
+    data : FrequencyData, Signal
         Input data to integrate. Its `cshape` needs to be (..., #theta, #phi)
         or (..., #phi, #theta).
     coords : Coordinates

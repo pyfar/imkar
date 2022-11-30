@@ -1,7 +1,6 @@
 import pytest
 import numpy as np
-
-from imkar import integrate
+import imkar as ik
 import pyfar as pf
 
 
@@ -20,7 +19,7 @@ def test_surface_sphere_uniform_data_different_limits(
     data, coords = _create_test_data(
         np.arange(phi_0, phi_1+delta, delta),
         np.arange(theta_0, theta_1+delta, delta))
-    result = integrate.surface_sphere(data, coords)
+    result = ik.integrate.surface_sphere(data, coords)
     actual = np.real(result.freq[0, 0])
     np.testing.assert_allclose(actual, desired, rtol=5e-3)
 
@@ -42,7 +41,7 @@ def test_surface_sphere_data_preserve_shape_with_different_limits(
         np.arange(phi_0, phi_1+delta, delta),
         np.arange(theta_0, theta_1+delta, delta),
         data_raw=data_raw)
-    result = integrate.surface_sphere(data, coords)
+    result = ik.integrate.surface_sphere(data, coords)
     actual = np.squeeze(np.real(result.freq))
     np.testing.assert_allclose(actual, data_raw*desired, rtol=5e-3)
 
@@ -63,7 +62,7 @@ def test_surface_sphere_nonuniform_data_different_limits(
     data, coords = _create_test_data(
         np.arange(phi_0, phi_1+delta, delta),
         np.arange(theta_0, theta_1+delta, delta))
-    result = integrate.surface_sphere(data, coords)
+    result = ik.integrate.surface_sphere(data, coords)
     actual = np.real(result.freq[0, 0])
     np.testing.assert_allclose(actual, desired, rtol=5e-3, atol=0.04)
 
@@ -78,7 +77,7 @@ def test_spherical_warning_wrong_radius():
     sph[:, 1, 2] = 2
     coords.set_sph(sph[..., 0], sph[..., 1], sph[..., 2])
     with pytest.warns(Warning, match='radi'):
-        integrate.surface_sphere(data, coords)
+        ik.integrate.surface_sphere(data, coords)
 
 
 def test_surface_sphere_error_invalid_coordinates_shape():
@@ -90,7 +89,7 @@ def test_surface_sphere_error_invalid_coordinates_shape():
     sph = sph[1:, :, :]
     coords.set_sph(sph[..., 0], sph[..., 1], sph[..., 2])
     with pytest.raises(ValueError, match='Coordinates.cshape'):
-        integrate.surface_sphere(data, coords)
+        ik.integrate.surface_sphere(data, coords)
 
 
 def _create_test_data(phi_rad, theta_rad, data_raw=None, n_bins=1, radius=1):
