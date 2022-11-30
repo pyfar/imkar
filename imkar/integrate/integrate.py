@@ -71,7 +71,7 @@ def surface_sphere(data, coords):
 
     # integrate over angles with wight for sperical integration
     weights = np.transpose(np.atleast_2d(np.sin(theta)))
-    result_raw = trapezoid(np.abs(data.freq), x=phi, axis=axis_index)
+    result_raw = trapezoid(data.freq, x=phi, axis=axis_index)
     result_raw1 = trapezoid(result_raw*weights, x=theta, axis=-2)
 
     return pf.FrequencyData(result_raw1, data.frequencies)
