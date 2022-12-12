@@ -128,7 +128,6 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.7"
                 - "3.8"
                 - "3.9"
                 - "3.10"
@@ -157,7 +156,6 @@ test_and_publish:
           matrix:
             parameters:
               version:
-                - "3.7"
                 - "3.8"
                 - "3.9"
                 - "3.10"
