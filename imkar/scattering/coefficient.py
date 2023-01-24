@@ -14,7 +14,8 @@ def freefield(sample_pressure, reference_pressure, mic_positions):
     ----------
     sample_pressure : FrequencyData
         Reflected sound pressure or directivity of the test sample. Its cshape
-        need to be (..., #angle1, #angle2), see `mic_positions` for more detail.
+        need to be (..., #angle1, #angle2), see `mic_positions` for more
+        detail.
     reference_pressure : FrequencyData
         Reflected sound pressure or directivity of the test
         reference sample. It has the same shape as `sample_pressure`.
