@@ -14,16 +14,15 @@ def freefield(sample_pressure, reference_pressure, mic_positions):
     ----------
     sample_pressure : FrequencyData
         Reflected sound pressure or directivity of the test sample. Its cshape
-        need to be (..., #theta_incident_positions, #phi_incident_positions,
-        #angle1, #angle2)
+        need to be (..., #angle1, #angle2), see `mic_positions` for more detail.
     reference_pressure : FrequencyData
-        Reflection Reflection sound pressure or directivity of the test
+        Reflected sound pressure or directivity of the test
         reference sample. It has the same shape as `sample_pressure`.
     mic_positions : Coordinates
         A Coordinate object with all microphone positions. Its cshape need to
         be (#angle1, #angle2). In sperical coordinates the radii need to
-        be constant. It need to be same for `sample_pressure` and
-        `reference_pressure`.
+        be constant. Microphone positions need to be same for
+        `sample_pressure` and `reference_pressure`.
 
     Returns
     -------

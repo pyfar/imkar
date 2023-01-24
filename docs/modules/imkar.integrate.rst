@@ -1,5 +1,5 @@
 imkar.integrate
-=============
+===============
 
 .. automodule:: imkar.integrate
    :members:
