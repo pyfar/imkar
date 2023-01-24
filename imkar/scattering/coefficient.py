@@ -56,6 +56,14 @@ def freefield(sample_pressure, reference_pressure, mic_positions):
         raise ValueError("reference_pressure has to be FrequencyData")
     if not isinstance(mic_positions, pf.Coordinates):
         raise ValueError("microphone positions have to be Coordinates")
+    if not sample_pressure.cshape == reference_pressure.cshape:
+        raise ValueError(
+            "sample_presure and reference_pressure have to have the "
+            "same cshape.")
+    if any(sample_pressure.frequencies != reference_pressure.frequencies):
+        raise ValueError(
+            "sample_presure and reference_pressure have to have the "
+            "same frequencies.")
 
     # calculate according to mommertz correlation method Equation (5)
     p_sample_abs = pf.FrequencyData(

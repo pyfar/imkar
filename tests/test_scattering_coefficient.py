@@ -35,6 +35,11 @@ def test_freefield_wrong_input(frequencies, coords_half_sphere_10_deg):
         scattering.coefficient.freefield(p_sample, 1, mics)
     with pytest.raises(ValueError, match='microphone positions'):
         scattering.coefficient.freefield(p_sample, p_reference, 1)
+    with pytest.raises(ValueError, match='cshape'):
+        scattering.coefficient.freefield(p_sample[:-2, ...], p_reference, mics)
+    with pytest.raises(ValueError, match='same frequencies'):
+        p_sample.frequencies[0] = 1
+        scattering.coefficient.freefield(p_sample, p_reference, mics)
 
 
 @pytest.mark.parametrize("frequencies",  [
