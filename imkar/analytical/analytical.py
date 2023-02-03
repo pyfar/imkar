@@ -1,6 +1,8 @@
 import numpy as np
 import pyfar as pf
 
+from imkar import scattering
+
 def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
     """
     This function computes the scattering coefficient of periodic rectangular
@@ -49,7 +51,8 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
     phi_vector = phi_vector*np.pi/180 #from degree to radiant
     c = 343.901 # ITA constant
     h = height_to_length*length #height of the profile
-    lambda_air = c/frequency_vector[:] #vector of corresponding wavelength in air
+    #vector of corresponding wavelength in air
+    lambda_air = c/frequency_vector[:] 
     k = 2*np.pi/lambda_air #vector of wavenumbers
 
     eps = 1E-3 # stop criterion for infinite sum over u
@@ -76,7 +79,7 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
             #helping variables
             k_frequency = k[iFrequencies-1]
             k_alpha_n = (k_frequency*alpha_n[:]).T
-            jk_alpha_n_over_2width = 1j*k_alpha_n/(2*width)
+            jk_alpha_n_over_width = 1j*k_alpha_n/width
             #expkAlpha_n_width = (np.exp(1j*kAlpha_n*width))
 
             y_nr = np.zeros((n_max2, n_max2),dtype=complex)
@@ -90,18 +93,20 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
                     err = 1
                     while err>eps:
                         u_max[0,iR-1] = u_max[0,iR-1] + n_max2-1
-                        #print(u_max)
-                        #print(u_max.item((iR-1)))
 
                         if iR==1:
-                            U_u_n = np.zeros((u_max.item((iR-1))+1,n_max2),dtype=complex)
+                            U_u_n = np.zeros((u_max.item((iR-1))+1,n_max2),\
+                                dtype=complex)
                         elif u_max[0,iR-1]>u_max_element:
-                            U_u_n = np.zeros((u_max.item((iR-1))+1, n_max2),dtype=complex) 
+                            U_u_n = np.zeros((u_max.item((iR-1))+1, n_max2),\
+                                dtype=complex) 
                         
-                        if ((iR==1) or (u_max[0,iR-1]>u_max_element) or (iFrequencies>previous_frequency)):
-                            iU = np.arange(0., round(u_max.item((iR-1)))+1,dtype=int)[:, np.newaxis]                           
+                        if ((iR==1) or (u_max[0,iR-1]>u_max_element) or \
+                            (iFrequencies>previous_frequency)):
+                            iU = np.arange(0., round(u_max.item((iR-1)))+1,\
+                                dtype=int)[:, np.newaxis]                           
                             uVals = np.tile(iU, (1, n_max2))
-                            k_x_u = iU*np.pi/(2*width)
+                            k_x_u = iU*np.pi/width
                             x_u = np.emath.sqrt(k_frequency**2 - k_x_u**2)
 
                             CaseA = np.less(abs((k_alpha_n-k_x_u)), 1E-3)
@@ -111,17 +116,20 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
                             CaseC = np.ones(np.shape(CaseA))-(CaseA+CaseB)
                             CaseC = CaseC.astype(int) 
                             if(np.sum(CaseA)>0):                           
-                                U_u_n[np.nonzero(CaseA)] = 0.5*np.exp(1j*uVals[CaseA]*np.pi/2)
+                                U_u_n[np.nonzero(CaseA)] = 0.5*np.exp\
+                                    (1j*uVals[np.nonzero(CaseA)]*np.pi/2)
                             if(np.sum(CaseB)>0):
-                                U_u_n[np.nonzero(CaseB)] = 0.5*np.exp(-1j*uVals[CaseB]*np.pi/2)
-                            tmp = (jk_alpha_n_over_2width/\
-                                (k_x_u**2-k_alpha_n**2))*((np.exp(1j*k_alpha_n*width))-\
-                                    ((-1)**uVals*(np.exp(-1j*k_alpha_n*width))))  
-                            #print(np.shape(tmp))                      
+                                U_u_n[np.nonzero(CaseB)] = 0.5*np.exp\
+                                    (-1j*uVals[np.nonzero(CaseB)]*np.pi/2)
+                            tmp = (jk_alpha_n_over_width/\
+                                (k_x_u**2-k_alpha_n**2))*((np.exp(1j*k_alpha_n\
+                                    *width/2))-((-1)**uVals*(np.exp(-1j\
+                                        *k_alpha_n*width/2))))                       
                             U_u_n[np.nonzero(CaseC)] = tmp[np.nonzero(CaseC)]
 
                         tempU = np.sum([(np.sign(iU)+1)*x_u*np.tanh(1j*x_u*h)\
-                            *np.conjugate(U_u_n[iU,iN-1])*U_u_n[iU,iR-1]],axis=1)
+                            *np.conjugate(U_u_n[iU,iN-1])*U_u_n[iU,iR-1]]\
+                                ,axis=1)
 
                         err = np.abs((prevTempU-tempU)/prevTempU)
                         prevTempU = tempU
@@ -130,21 +138,19 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
                         if u_max_element<u_max.item((iR-1)):
                             u_max_element = u_max.item((iR-1))
                         
-                    y_nr[iN-1,iR-1] = tempU*2*width/(k_frequency*length)
+                    y_nr[iN-1,iR-1] = tempU*width/(k_frequency*length)
 
-            b = np.sin(phi_0)*(2-(abs(np.sign(n))+1)) + ((y_nr[:,n_max]).reshape(n_max2,1))
+            b = np.sin(phi_0)*(2-(abs(np.sign(n))+1)) + ((y_nr[:,n_max])\
+                .reshape(n_max2,1))
             A = np.diagflat(beta_n) -y_nr
 
             R_n = np.linalg.lstsq(A,b, 1E-6)
-            #print (R_n[0][n_max])
-            #validIds = np.abs(alpha_n)<=1
-            #checksum = np.sum((np.abs(R_n[validIds])**2)\
-            #    *beta_n[validIds]/np.sin(phi_0))
-            #absError = np.abs(checksum-1)
+            validIds = 1*(np.abs(alpha_n)<=1)
+            checksum = np.sum((np.abs(R_n[0][np.nonzero(validIds)])**2)\
+                *beta_n[np.nonzero(validIds)]/np.sin(phi_0))
+            absError = np.abs(checksum-1)
+            print(f'The absolute error is {absError}.')
             s[iFrequencies-1, iPhi-1] = 1-np.abs(R_n[0][n_max])**2
-            print(s)
-
-    #s.comment = 'Analytical solution of the scattering coefficient\
-    #     of rectangular profiles'
-    return s
+            #print(s)
+    return pf.FrequencyData(np.transpose(s), frequency_vector)
 
