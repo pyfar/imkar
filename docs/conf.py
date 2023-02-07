@@ -37,7 +37,6 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
-    'matplotlib.sphinxext.plot_directive',
     'sphinx.ext.mathjax',
     'autodocsumm']
 
