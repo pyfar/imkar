@@ -6,7 +6,7 @@ from imkar import integrate
 def freefield(sample_pressure, reference_pressure, mic_positions):
     """
     Calculate the free-field scattering coefficient for each incident direction
-    using the Mommertz correlation method [#]_. See :py:func:`random_incidence`
+    using the Mommertz correlation method [1]_. See :py:func:`random_incidence`
     to calculate the random incidence scattering coefficient.
 
 
@@ -33,7 +33,7 @@ def freefield(sample_pressure, reference_pressure, mic_positions):
 
     References
     ----------
-    .. [#]  E. Mommertz, „Determination of scattering coefficients from the
+    .. [1]  E. Mommertz, „Determination of scattering coefficients from the
             reflection directivity of architectural surfaces“, Applied
             Acoustics, Bd. 60, Nr. 2, S. 201–203, Juni 2000,
             doi: 10.1016/S0003-682X(99)00057-2.
