@@ -37,7 +37,7 @@ def freefield(sample_pressure, mic_positions):
 
     Examples
     --------
-    Calculate freefield diffusion coefficients and then the random incidence
+    Calculate free-field diffusion coefficients and then the random incidence
     diffusion coefficient.
 
     >>> import imkar as ik
@@ -52,7 +52,7 @@ def freefield(sample_pressure, mic_positions):
     if not isinstance(mic_positions, pf.Coordinates):
         raise ValueError("microphone positions have to be Coordinates")
 
-    # calculate according to mommertz correlation method Equation (6)
+    # calculate according to Mommertz correlation method Equation (6)
     p_sample_sq = pf.FrequencyData(
         np.abs(sample_pressure.freq)**2, sample_pressure.frequencies)
 
@@ -65,40 +65,3 @@ def freefield(sample_pressure, mic_positions):
     diffusion_coefficients.comment = 'diffusion coefficients'
 
     return diffusion_coefficients
-
-
-def random_incidence(scattering_coefficient, incident_positions):
-    """Calculate the random-incidence scattering coefficient
-    according to Paris formula. Note that the incident directions should be
-    equally distributed to get a valid result.
-
-    Parameters
-    ----------
-    scattering_coefficient : FrequencyData
-        The scattering coefficient for each plane wave direction. Its cshape
-        need to be (..., #angle1, #angle2)
-    incident_positions : Coordinates
-        Defines the incidence directions of each `scattering_coefficient` in a
-        Coordinates object. Its cshape need to be (#angle1, #angle2). In
-        sperical coordinates the radii  need to be constant.
-
-    Returns
-    -------
-    random_scattering : FrequencyData
-        The random-incidence scattering coefficient.
-    """
-    if not isinstance(scattering_coefficient, pf.FrequencyData):
-        raise ValueError("scattering_coefficient has to be FrequencyData")
-    if (incident_positions is not None) & \
-            ~isinstance(incident_positions, pf.Coordinates):
-        raise ValueError("incident_positions have to be None or Coordinates")
-
-    sph = incident_positions.get_sph()
-    theta = sph[..., 1]
-    weight = np.sin(2*theta)  # sin(2*theta)
-    norm = np.sum(weight)
-    random_scattering = scattering_coefficient*weight/norm
-    random_scattering.freq = np.sum(random_scattering.freq, axis=-2)
-    random_scattering.freq = np.sum(random_scattering.freq, axis=-2)
-    random_scattering.comment = 'random-incidence scattering coefficient'
-    return random_scattering
