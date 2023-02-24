@@ -32,7 +32,7 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-imkarhttps://github.com/pyfar/pyfar could always use more documentation, whether as part of the
+https://github.com/pyfar/imkar could always use more documentation, whether as part of the
 official imkar docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
@@ -104,15 +104,15 @@ Pytest provides several, sophisticated functionalities which could reduce the ef
 
 - Similar tests executing the same code with different variables can be `parametrized <https://docs.pytest.org/en/stable/example/parametrize.html>`_. An example is ``test___eq___differInPoints`` in *test_coordinates.py*.
 
-- Run a single test with
+- Run a single test with::
 
     $ pytest tests/test_plot.py::test_line_plots
 
-- Exclude tests (for example the time consuming test of plot) with
+- Exclude tests (for example the time consuming test of plot) with::
 
     $ pytest -k 'not plot'
 
-- Create an html report on the test `coverage <https://coverage.readthedocs.io/en/coverage-5.5/>`_ with
+- Create an html report on the test `coverage <https://coverage.readthedocs.io/en/coverage-5.5/>`_ with::
 
     $ pytest --cov=. --cov-report=html
 
@@ -185,23 +185,17 @@ See the `Sphinx homepage <https://www.sphinx-doc.org>`_ for more information.
 Building the Documentation
 --------------------------
 
-You can build the documentation of your branch using Sphinx by executing the make script inside the docs folder.
-
-.. code-block:: console
+You can build the documentation of your branch using Sphinx by executing the make script inside the docs folder::
 
     $ cd docs/
     $ make html
 
-After Sphinx finishes you can open the generated html using any browser
-
-.. code-block:: console
+After Sphinx finishes you can open the generated html using any browser::
 
     $ docs/_build/index.html
 
 Note that some warnings are only shown the first time you build the
-documentation. To show the warnings again use
-
-.. code-block:: console
+documentation. To show the warnings again use::
 
     $ make clean
 
@@ -214,9 +208,7 @@ Deploying
 
 A reminder for the maintainers on how to deploy.
 Make sure all your changes are committed (including an entry in HISTORY.rst).
-Then run:
-
-..  code-block:: console
+Then run::
 
     $ bump2version patch # possible: major / minor / patch
     $ git push
@@ -225,8 +217,6 @@ Then run:
 CircleCI will then deploy to PyPI if tests pass.
 
 To manually build the package and upload to pypi run::
-
-.. code-block:: console
 
     $ python setup.py sdist bdist_wheel
     $ twine upload dist/*
