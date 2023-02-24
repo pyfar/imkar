@@ -121,7 +121,7 @@ html_theme = 'insipid'
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pyfardoc'
+htmlhelp_basename = 'imkardoc'
 
 
 # -- Options for LaTeX output ------------------------------------------
