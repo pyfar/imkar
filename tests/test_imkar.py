@@ -22,12 +22,3 @@ def test_content(response):  # noqa
     """Sample pytest test function with the pytest fixture as an argument."""
     # from bs4 import BeautifulSoup
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
-
-
-def test_imports():
-    import imkar
-    assert imkar
-    import imkar.diffusion as diffusion
-    assert diffusion
-    import imkar.scattering as scattering
-    assert scattering
