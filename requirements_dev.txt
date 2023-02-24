@@ -11,3 +11,5 @@ pytest
 numpy
 scipy
 pyfar
+autodocsumm
+insipid-sphinx-theme
