@@ -8,3 +8,4 @@ according to their modules.
    :maxdepth: 1
 
    modules/imkar.scattering.coefficient
+   modules/imkar.diffusion.coefficient
