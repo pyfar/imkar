@@ -174,7 +174,7 @@ texinfo_documents = [
     (master_doc, 'imkar',
      'imkar Documentation',
      author,
-     'pyfar',
+     'imkar',
      'One line description of project.',
      'Miscellaneous'),
 ]

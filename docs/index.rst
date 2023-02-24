@@ -1,10 +1,3 @@
-.. |imkar_logo| image:: resources/imkar.png
-   :width: 150
-   :alt: Alternative text
-
-|imkar_logo|
-
-
 Getting Started
 ===============
 
@@ -15,11 +8,6 @@ Getting Started
 
 Documentation
 =============
-
-.. toctree::
-   :maxdepth: 2
-
-   concepts
 
 .. toctree::
    :maxdepth: 2
