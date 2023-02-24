@@ -1,7 +1,7 @@
 Modules
 =======
 
-The following gives detailed information about all pyfar functions sorted
+The following gives detailed information about all imkar functions sorted
 according to their modules.
 
 .. toctree::
