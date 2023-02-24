@@ -1,7 +1,6 @@
 import numpy as np
 import pyfar as pf
-
-from imkar import scattering
+import numbers
 
 def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
     """
@@ -17,10 +16,11 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
         Vector of frequencies the scattering coefficient is computed at.
     phi_vector : array, double
         Vector of incidences phi the scattering coefficient is computed at.
+        Values between 0°-90° allowed.
     width : double
-        Width of the rectangulars.
+        Width of the rectangulars in m.
     length : double
-        Length of the regtangulars.
+        Length of the regtangulars in m.
     height_to_length : double
         Height to length ratio of the rectangulars.
 
@@ -28,10 +28,7 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
     -------
     s : FrequencyData
         The analytical solution for the scattering coefficient of a 
-        rectangular profile at the given incidences and frequencies.
-    s_rand : Frequency Data
-        The analytical solution for the scattering coefficient of a
-        rectangular profile at a random incidence.
+        rectangular profile at the given incidences and frequencies.    
 
     References
     ----------
@@ -47,6 +44,26 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
     replaces the parameter 2A.
 
     """
+    #check inputs    
+    if not isinstance(frequency_vector, np.ndarray) or\
+        not isinstance(frequency_vector.item(0), numbers.Real):
+        raise TypeError("frequency_vector has to be an array of real numbers")
+    if frequency_vector.ndim>1:
+        raise ValueError("frequency_vector has to be 1-dimensional")
+    if not isinstance(phi_vector, np.ndarray) or \
+        not isinstance(phi_vector.item(0), numbers.Real):
+        raise TypeError("phi_vector has to be an array of real numbers")
+    if phi_vector.ndim>1:
+        raise ValueError("phi_vector has to be 1-dimensional")
+    if (np.any(phi_vector<=0)) or (np.any(phi_vector>=90)):
+        raise ValueError("phi_vector values have to be between 0° and 90°")
+    if not isinstance(width, numbers.Real) or width<=0:
+        raise TypeError("width has to be a real number >0")
+    if not isinstance(length, numbers.Real) or length<=0:
+        raise TypeError("length has to be a real number >0")
+    if not isinstance(height_to_length, numbers.Real) or height_to_length<=0:
+        raise TypeError("height_to_length has to be a real number >0")
+
     # Initialization
     phi_vector = phi_vector*np.pi/180 #from degree to radiant
     c = 343.901 # ITA constant
@@ -61,7 +78,6 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
 
     x_u = np.zeros((1, n_max),dtype=complex)
     n = np.arange(-n_max,n_max+1)[:, np.newaxis]
-    #index_0 = 51 # index for R_0
     previous_frequency = 0
 
     n_frequency = frequency_vector.size # number of computed frequencies
@@ -73,14 +89,12 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
         for iPhi in range(1, (n_phi+1)):
             phi_0 = phi_vector[iPhi-1]
             alpha_n = np.cos(phi_0) + n*lambda_air[iFrequencies-1]/length
-            beta_n = np.conj(-(1j*np.emath.sqrt(alpha_n**2-1)))
-            #np.sin(np.emath.arccos(alpha_n))            
+            beta_n = np.conj(-(1j*np.emath.sqrt(alpha_n**2-1)))            
 
             #helping variables
             k_frequency = k[iFrequencies-1]
             k_alpha_n = (k_frequency*alpha_n[:]).T
             jk_alpha_n_over_width = 1j*k_alpha_n/width
-            #expkAlpha_n_width = (np.exp(1j*kAlpha_n*width))
 
             y_nr = np.zeros((n_max2, n_max2),dtype=complex)
 
@@ -151,6 +165,5 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
             absError = np.abs(checksum-1)
             print(f'The absolute error is {absError}.')
             s[iFrequencies-1, iPhi-1] = 1-np.abs(R_n[0][n_max])**2
-            #print(s)
     return pf.FrequencyData(np.transpose(s), frequency_vector)
 
