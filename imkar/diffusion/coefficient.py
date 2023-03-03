@@ -11,7 +11,7 @@ def freefield(sample_pressure, microphone_weights):
 
     Parameters
     ----------
-    sample_pressure : pf.FrequencyData
+    sample_pressure : pyfar.FrequencyData
         Reflected sound pressure or directivity of the test sample. Its cshape
         need to be (..., #microphones).
     microphone_weights : np.ndarray
@@ -21,7 +21,7 @@ def freefield(sample_pressure, microphone_weights):
 
     Returns
     -------
-    diffusion_coefficients : FrequencyData
+    diffusion_coefficients : pyfar.FrequencyData
         The diffusion coefficient for each plane wave direction.
 
 
