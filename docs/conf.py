@@ -99,10 +99,6 @@ todo_include_todos = False
 # default language for highlighting in source code
 highlight_language = "python3"
 
-intersphinx_mapping = {
-    'pyfar': ('https://pyfar.readthedocs.io/en/stable/', None)
-    }
-
 # -- Options for HTML output -------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
