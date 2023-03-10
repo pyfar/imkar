@@ -3,11 +3,21 @@ import pyfar as pf
 
 
 def freefield(sample_pressure, reference_pressure, weights_microphones):
-    """
+    r"""
     Calculate the free-field scattering coefficient for each incident direction
-    using the Mommertz correlation method [1]_. See :py:func:`random_incidence`
-    to calculate the random incidence scattering coefficient.
+    using the Mommertz correlation method [1]_:
 
+    .. math::
+        s(\vartheta_S,\varphi_S) = 1 -
+            \frac{|\sum \underline{p}_1(\vartheta_R,\varphi_R) \cdot
+            \underline{p}_0^*(\vartheta_R,\varphi_R) \cdot w|^2}
+            {\sum |\underline{p}_1(\vartheta_R,\varphi_R)|^2 \cdot w \cdot
+            \sum |\underline{p}_0(\vartheta_R,\varphi_R)|^2 \cdot w }
+
+    with the ``sample_pressure`` $\underline{p}_1$, the
+    ``reference_pressure`` $\underline{p}_0$, and the area weights
+    ``weights_microphones`` $w$. See :py:func:`random_incidence` to
+    calculate the random incidence scattering coefficient.
 
     Parameters
     ----------
