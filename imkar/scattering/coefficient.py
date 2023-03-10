@@ -11,8 +11,9 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
         s(\vartheta_S,\varphi_S) = 1 -
             \frac{|\sum \underline{p}_{sample}(\vartheta_R,\varphi_R) \cdot
             \underline{p}_{reference}^*(\vartheta_R,\varphi_R) \cdot w|^2}
-            {\sum |\underline{p}_{sample}(\vartheta_R,\varphi_R)|^2 \cdot w \cdot
-            \sum |\underline{p}_{reference}(\vartheta_R,\varphi_R)|^2 \cdot w }
+            {\sum |\underline{p}_{sample}(\vartheta_R,\varphi_R)|^2 \cdot w
+            \cdot \sum |\underline{p}_{reference}(\vartheta_R,\varphi_R)|^2
+            \cdot w }
 
     with the ``sample_pressure``, the ``reference_pressure``, and the
     area weights ``weights_microphones`` ``w``. See
@@ -102,18 +103,24 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
 
 
 def random_incidence(
-        scattering_coefficient, incident_positions):
-    """Calculate the random-incidence scattering coefficient
+        scattering_coefficients, incident_positions):
+    r"""Calculate the random-incidence scattering coefficient
     according to Paris formula. Note that the incident directions should be
     equally distributed to get a valid result.
 
+    .. math::
+        s_{rand} = \sum s(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
+
+    with the ``scattering_coefficients``, and the
+    area weights ``w`` from the ``incident_positions``.
+
     Parameters
     ----------
-    scattering_coefficient : FrequencyData
+    scattering_coefficients : FrequencyData
         The scattering coefficient for each plane wave direction. Its cshape
         need to be (..., #angle1, #angle2)
     incident_positions : pf.Coordinates
-        Defines the incidence directions of each `scattering_coefficient` in a
+        Defines the incidence directions of each `scattering_coefficients` in a
         Coordinates object. Its cshape need to be (#angle1, #angle2). In
         sperical coordinates the radii  need to be constant.
 
@@ -122,8 +129,8 @@ def random_incidence(
     random_scattering : FrequencyData
         The random-incidence scattering coefficient.
     """
-    if not isinstance(scattering_coefficient, pf.FrequencyData):
-        raise ValueError("scattering_coefficient has to be FrequencyData")
+    if not isinstance(scattering_coefficients, pf.FrequencyData):
+        raise ValueError("scattering_coefficients has to be FrequencyData")
     if (incident_positions is not None) & \
             ~isinstance(incident_positions, pf.Coordinates):
         raise ValueError("incident_positions have to be None or Coordinates")
@@ -131,7 +138,7 @@ def random_incidence(
     theta = incident_positions.get_sph().T[1]
     weight = np.cos(theta) * incident_positions.weights
     norm = np.sum(weight)
-    random_scattering = scattering_coefficient*weight/norm
+    random_scattering = scattering_coefficients*weight/norm
     random_scattering.freq = np.sum(random_scattering.freq, axis=-2)
     random_scattering.comment = 'random-incidence scattering coefficient'
     return random_scattering
