@@ -22,10 +22,10 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
 
     Parameters
     ----------
-    sample_pressure : pf.FrequencyData
+    sample_pressure : pyfar.FrequencyData
         Reflected sound pressure or directivity of the test sample. Its cshape
         need to be (..., #microphones).
-    reference_pressure : pf.FrequencyData
+    reference_pressure : pyfar.FrequencyData
         Reflected sound pressure or directivity of the test
         reference sample. It has the same shape as `sample_pressure`.
     weights_microphones : np.ndarray
@@ -35,7 +35,7 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
 
     Returns
     -------
-    scattering_coefficients : FrequencyData
+    scattering_coefficients : pyfar.FrequencyData
         The scattering coefficient for each incident direction.
 
 
@@ -116,17 +116,17 @@ def random_incidence(
 
     Parameters
     ----------
-    scattering_coefficients : FrequencyData
+    scattering_coefficients : pyfar.FrequencyData
         The scattering coefficient for each plane wave direction. Its cshape
         need to be (..., #angle1, #angle2)
-    incident_positions : pf.Coordinates
+    incident_positions : pyfar.Coordinates
         Defines the incidence directions of each `scattering_coefficients` in a
         Coordinates object. Its cshape need to be (#angle1, #angle2). In
         sperical coordinates the radii  need to be constant.
 
     Returns
     -------
-    random_scattering : FrequencyData
+    random_scattering : pyfar.FrequencyData
         The random-incidence scattering coefficient.
     """
     if not isinstance(scattering_coefficients, pf.FrequencyData):
