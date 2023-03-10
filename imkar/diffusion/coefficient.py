@@ -3,11 +3,25 @@ import pyfar as pf
 
 
 def freefield(sample_pressure, microphone_weights):
-    """
+    r"""
     Calculate the free-field diffusion coefficient for each incident direction
     after ISO 17497-2:2012 [1]_. See :py:func:`random_incidence`
     to calculate the random incidence diffusion coefficient.
 
+    .. math::
+        d(\vartheta_S,\varphi_S) =
+            \frac{(\sum |\underline{p}_{sample}(\vartheta_R,\varphi_R)| \cdot
+            N_i)^2 - \sum (|\underline{p}_{sample}(\vartheta_R,\varphi_R)|)^2
+            \cdot N_i}
+            {(\sum N_i - 1) \cdot \sum
+            (|\underline{p}_{sample}(\vartheta_R,\varphi_R)|)^2 \cdot N_i}
+
+    with
+
+    .. math::
+        N_i = \frac{A_i}{A_{min}}
+
+    and ``A`` being the area weights ``microphone_weights``.
 
     Parameters
     ----------
