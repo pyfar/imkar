@@ -2,7 +2,7 @@ import numpy as np
 import pyfar as pf
 
 
-def freefield(sample_pressure, reference_pressure, weights_microphones):
+def freefield(sample_pressure, reference_pressure, microphone_weights):
     r"""
     Calculate the free-field scattering coefficient for each incident direction
     using the Mommertz correlation method [1]_:
@@ -16,7 +16,7 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
             \cdot w }
 
     with the ``sample_pressure``, the ``reference_pressure``, and the
-    area weights ``weights_microphones`` ``w``. See
+    area weights ``weights_microphones``. See
     :py:func:`random_incidence` to calculate the random incidence
     scattering coefficient.
 
@@ -26,12 +26,12 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
         Reflected sound pressure or directivity of the test sample. Its cshape
         need to be (..., #microphones).
     reference_pressure : pyfar.FrequencyData
-        Reflected sound pressure or directivity of the test
-        reference sample. It has the same shape as `sample_pressure`.
+        Reflected sound pressure or directivity of the
+        reference sample. Needs to have the same cshape and frequencies as `sample_pressure`.
     weights_microphones : np.ndarray
-        An array object with all weights for the microphone positions.
-        Its cshape need to be (#microphones). Microphone positions need to be
-        same for `sample_pressure` and `reference_pressure`.
+        Array containing the area weights for the microphone positions.
+        Its shape needs to be (#microphones), so it matches the last dimension in the cshape of
+       `sample_pressure` and `reference_pressure`.
 
     Returns
     -------
@@ -46,29 +46,19 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
             Acoustics, Bd. 60, Nr. 2, S. 201-203, June 2000,
             doi: 10.1016/S0003-682X(99)00057-2.
 
-    Examples
-    --------
-    Calculate freefield scattering coefficients and then the random incidence
-    scattering coefficient.
-
-    >>> import imkar
-    >>> scattering_coefficients = imkar.scattering.coefficient.freefield(
-    >>>     sample_pressure, reference_pressure, mic_positions.weights)
-    >>> random_s = imkar.scattering.coefficient.random_incidence(
-    >>>     scattering_coefficients, incident_positions)
     """
     # check inputs
     if not isinstance(sample_pressure, pf.FrequencyData):
-        raise ValueError("sample_pressure has to be FrequencyData")
+        raise ValueError("sample_pressure has to be a pyfar.FrequencyData object")
     if not isinstance(reference_pressure, pf.FrequencyData):
-        raise ValueError("reference_pressure has to be FrequencyData")
+        raise ValueError("reference_pressure has to be a pyfar.FrequencyData object")
     if not isinstance(weights_microphones, np.ndarray):
         raise ValueError("weights_microphones have to be a numpy.array")
-    if not sample_pressure.cshape == reference_pressure.cshape:
+    if sample_pressure.cshape != reference_pressure.cshape:
         raise ValueError(
             "sample_pressure and reference_pressure have to have the "
             "same cshape.")
-    if not weights_microphones.shape[0] == sample_pressure.cshape[-1]:
+    if weights_microphones.shape[0] != sample_pressure.cshape[-1]:
         raise ValueError(
             "the last dimension of sample_pressure need be same as the "
             "weights_microphones.shape.")
@@ -81,10 +71,8 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
     # calculate according to mommertz correlation method Equation (5)
     p_sample = np.moveaxis(sample_pressure.freq, -1, 0)
     p_reference = np.moveaxis(reference_pressure.freq, -1, 0)
-    p_sample_abs = np.abs(p_sample)
-    p_reference_abs = np.abs(p_reference)
-    p_sample_sq = p_sample_abs*p_sample_abs
-    p_reference_sq = p_reference_abs*p_reference_abs
+    p_sample_sq = np.abs(p_sample)**2
+    p_reference_sq = np.abs(p_reference)**2
     p_cross = p_sample * np.conj(p_reference)
 
     p_sample_sum = np.sum(p_sample_sq * weights_microphones, axis=-1)
@@ -105,21 +93,22 @@ def freefield(sample_pressure, reference_pressure, weights_microphones):
 def random_incidence(
         scattering_coefficients, incident_positions):
     r"""Calculate the random-incidence scattering coefficient
-    according to Paris formula. Note that the incident directions should be
-    equally distributed to get a valid result.
+    according to Paris formula.
 
     .. math::
         s_{rand} = \sum s(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
 
     with the ``scattering_coefficients``, and the
     area weights ``w`` from the ``incident_positions``.
+     Note that the incident directions should be
+    equally distributed to get a valid result.
 
     Parameters
     ----------
     scattering_coefficients : pyfar.FrequencyData
-        The scattering coefficient for each plane wave direction. Its cshape
+        Scattering coefficients for different incident directions. Its cshape
         need to be (..., #angle1, #angle2)
-    incident_positions : pyfar.Coordinates
+    incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `scattering_coefficients` in a
         Coordinates object. Its cshape need to be (#angle1, #angle2). In
         sperical coordinates the radii  need to be constant.
@@ -131,14 +120,12 @@ def random_incidence(
     """
     if not isinstance(scattering_coefficients, pf.FrequencyData):
         raise ValueError("scattering_coefficients has to be FrequencyData")
-    if (incident_positions is not None) & \
-            ~isinstance(incident_positions, pf.Coordinates):
+    if not isinstance(incident_positions, pf.Coordinates):
         raise ValueError("incident_positions have to be None or Coordinates")
 
     theta = incident_positions.get_sph().T[1]
     weight = np.cos(theta) * incident_positions.weights
     norm = np.sum(weight)
-    random_scattering = scattering_coefficients*weight/norm
-    random_scattering.freq = np.sum(random_scattering.freq, axis=-2)
+    random_scattering.freq = np.sum(scattering_coefficients.freq*weight/norm, axis=-2)
     random_scattering.comment = 'random-incidence scattering coefficient'
     return random_scattering
