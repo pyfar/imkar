@@ -49,7 +49,7 @@ def test_rectangular_wrong_input():
 
     with pytest.raises(TypeError, match='width'):
         analytical.rectangular(np.array([500]), np.array([30]), 0, 1,
-                               0.49, 343.901)
+                               0.49)
 
     with pytest.raises(TypeError, match='length'):
         analytical.rectangular(np.array([500]), np.array([30]), 0.5, (1+5j),
@@ -58,3 +58,7 @@ def test_rectangular_wrong_input():
     with pytest.raises(TypeError, match='height'):
         analytical.rectangular(np.array([500]), np.array([30]), 0.5, 1,
                                -3, 343.901)
+
+    with pytest.raises(TypeError, match='c'):
+        analytical.rectangular(np.array([500]), np.array([30]), 0.5, 1,
+                               0.49, -343.901)

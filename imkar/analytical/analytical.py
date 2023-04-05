@@ -67,6 +67,8 @@ def rectangular(frequencies, phis, width, length, height, c=343):
         raise TypeError("length has to be a real number >0")
     if not isinstance(height, numbers.Real) or height <= 0:
         raise TypeError("height has to be a real number >0")
+    if not isinstance(c, numbers.Real) or c <= 0:
+        raise TypeError("c has to be a real number >0")
 
     # Initialization
     phis = phis*np.pi/180  # from degree to radiant
