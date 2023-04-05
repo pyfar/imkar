@@ -153,7 +153,7 @@ def rectangular(frequencies, phis, width, length, height, c=343):
                                         np.tanh(1j*x_u*height) *
                                         np.conjugate(U_u_n[iU, iN-1]) *
                                         U_u_n[iU, iR-1]],
-                                       axis=1)
+                                        axis=1)
 
                         err = np.abs((previous_temp_U-temp_U)/previous_temp_U)
                         previous_temp_U = temp_U
