@@ -1,8 +1,7 @@
 import numpy as np
 import pyfar as pf
-import numbers
 
-def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
+def rectangular(frequency_vector, phi_vector, width, length, height, c):
     """
     This function computes the scattering coefficient of periodic rectangular
     profiles, assuming that the extent is infinite.
@@ -21,9 +20,10 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
         Width of the rectangulars in m.
     length : double
         Length of the regtangulars in m.
-    height_to_length : double
-        Height to length ratio of the rectangulars.
-
+    height : double
+        Height of the profile structure.
+    c : double
+        Speed of sound with which the scattering coefficient is computed.
     Returns
     -------
     s : FrequencyData
@@ -46,32 +46,29 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
     """
     #check inputs    
     if not isinstance(frequency_vector, np.ndarray) or\
-        not isinstance(frequency_vector.item(0), numbers.Real):
+            not isinstance(frequency_vector.item(0), float):
         raise TypeError("frequency_vector has to be an array of real numbers")
-    if frequency_vector.ndim>1:
+    if frequency_vector.ndim > 1:
         raise ValueError("frequency_vector has to be 1-dimensional")
     if not isinstance(phi_vector, np.ndarray) or \
-        not isinstance(phi_vector.item(0), numbers.Real):
+            not isinstance(phi_vector.item(0), float):
         raise TypeError("phi_vector has to be an array of real numbers")
-    if phi_vector.ndim>1:
+    if phi_vector.ndim > 1:
         raise ValueError("phi_vector has to be 1-dimensional")
-    if (np.any(phi_vector<=0)) or (np.any(phi_vector>=90)):
+    if (np.any(phi_vector <= 0)) or (np.any(phi_vector >= 90)):
         raise ValueError("phi_vector values have to be between 0° and 90°")
-    if not isinstance(width, numbers.Real) or width<=0:
+    if not isinstance(width, float) or width <= 0:
         raise TypeError("width has to be a real number >0")
-    if not isinstance(length, numbers.Real) or length<=0:
+    if not isinstance(length, float) or length <= 0:
         raise TypeError("length has to be a real number >0")
-    if not isinstance(height_to_length, numbers.Real) or height_to_length<=0:
+    if not isinstance(height, float) or height <= 0:
         raise TypeError("height_to_length has to be a real number >0")
 
     # Initialization
     phi_vector = phi_vector*np.pi/180 #from degree to radiant
-    c = 343.901 # ITA constant
-    h = height_to_length*length #height of the profile
     #vector of corresponding wavelength in air
-    lambda_air = c/frequency_vector[:] 
+    lambda_air = c/frequency_vector
     k = 2*np.pi/lambda_air #vector of wavenumbers
-
     eps = 1E-3 # stop criterion for infinite sum over u
     n_max = 50 # truncation parameter for numbers of outgoing waves
     n_max2 = 2*n_max+1 #counter from -N to N including zero
@@ -85,14 +82,14 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
     s = np.zeros((n_frequency, n_phi))
 
     #calculation
-    for iFrequencies in range(1, (n_frequency+1)):
-        for iPhi in range(1, (n_phi+1)):
-            phi_0 = phi_vector[iPhi-1]
-            alpha_n = np.cos(phi_0) + n*lambda_air[iFrequencies-1]/length
+    for iFrequencies in range(0, n_frequency):
+        for iPhi in range(0, n_phi):
+            phi_0 = phi_vector[iPhi]
+            alpha_n = np.cos(phi_0) + n*lambda_air[iFrequencies]/length
             beta_n = np.conj(-(1j*np.emath.sqrt(alpha_n**2-1)))            
 
             #helping variables
-            k_frequency = k[iFrequencies-1]
+            k_frequency = k[iFrequencies]
             k_alpha_n = (k_frequency*alpha_n[:]).T
             jk_alpha_n_over_width = 1j*k_alpha_n/width
 
@@ -116,7 +113,7 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
                                 dtype=complex) 
                         
                         if ((iR==1) or (u_max[0,iR-1]>u_max_element) or \
-                            (iFrequencies>previous_frequency)):
+                            ((iFrequencies+1)>previous_frequency)):
                             iU = np.arange(0., round(u_max.item((iR-1)))+1,\
                                 dtype=int)[:, np.newaxis]                           
                             uVals = np.tile(iU, (1, n_max2))
@@ -129,10 +126,10 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
                             CaseB = CaseB.astype(int)
                             CaseC = np.ones(np.shape(CaseA))-(CaseA+CaseB)
                             CaseC = CaseC.astype(int) 
-                            if(np.sum(CaseA)>0):                           
+                            if np.sum(CaseA) > 0:                           
                                 U_u_n[np.nonzero(CaseA)] = 0.5*np.exp\
                                     (1j*uVals[np.nonzero(CaseA)]*np.pi/2)
-                            if(np.sum(CaseB)>0):
+                            if np.sum(CaseA) > 0:
                                 U_u_n[np.nonzero(CaseB)] = 0.5*np.exp\
                                     (-1j*uVals[np.nonzero(CaseB)]*np.pi/2)
                             tmp = (jk_alpha_n_over_width/\
@@ -141,13 +138,13 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
                                         *k_alpha_n*width/2))))                       
                             U_u_n[np.nonzero(CaseC)] = tmp[np.nonzero(CaseC)]
 
-                        tempU = np.sum([(np.sign(iU)+1)*x_u*np.tanh(1j*x_u*h)\
+                        tempU = np.sum([(np.sign(iU)+1)*x_u*np.tanh(1j*x_u*height)\
                             *np.conjugate(U_u_n[iU,iN-1])*U_u_n[iU,iR-1]]\
                                 ,axis=1)
 
                         err = np.abs((prevTempU-tempU)/prevTempU)
                         prevTempU = tempU
-                        previous_frequency = iFrequencies                        
+                        previous_frequency = iFrequencies+1                    
 
                         if u_max_element<u_max.item((iR-1)):
                             u_max_element = u_max.item((iR-1))
@@ -164,6 +161,6 @@ def rectangular(frequency_vector, phi_vector, width, length, height_to_length):
                 *beta_n[np.nonzero(validIds)]/np.sin(phi_0))
             absError = np.abs(checksum-1)
             print(f'The absolute error is {absError}.')
-            s[iFrequencies-1, iPhi-1] = 1-np.abs(R_n[0][n_max])**2
+            s[iFrequencies, iPhi] = 1-np.abs(R_n[0][n_max])**2
     return pf.FrequencyData(np.transpose(s), frequency_vector)
 
