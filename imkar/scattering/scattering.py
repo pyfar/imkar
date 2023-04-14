@@ -94,7 +94,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
 
 
 def random(
-        scattering_coefficients, incident_positions):
+        scattering_coefficients, incident_directions):
     r"""Calculate the random-incidence scattering coefficient
     according to Paris formula.
 
@@ -102,7 +102,7 @@ def random(
         s_{rand} = \sum s(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
 
     with the ``scattering_coefficients``, and the
-    area weights ``w`` from the ``incident_positions``.
+    area weights ``w`` from the ``incident_directions``.
     Note that the incident directions should be
     equally distributed to get a valid result.
 
@@ -124,15 +124,15 @@ def random(
     """
     if not isinstance(scattering_coefficients, pf.FrequencyData):
         raise ValueError("scattering_coefficients has to be FrequencyData")
-    if not isinstance(incident_positions, pf.Coordinates):
-        raise ValueError("incident_positions have to be None or Coordinates")
-    if incident_positions.cshape[0] != scattering_coefficients.cshape[-1]:
+    if not isinstance(incident_directions, pf.Coordinates):
+        raise ValueError("incident_directions have to be None or Coordinates")
+    if incident_directions.cshape[0] != scattering_coefficients.cshape[-1]:
         raise ValueError(
             "the last dimension of scattering_coefficients need be same as "
-            "the incident_positions.cshape.")
+            "the incident_directions.cshape.")
 
-    theta = incident_positions.get_sph().T[1]
-    weight = np.cos(theta) * incident_positions.weights
+    theta = incident_directions.get_sph().T[1]
+    weight = np.cos(theta) * incident_directions.weights
     norm = np.sum(weight)
     coefficients = np.swapaxes(scattering_coefficients.freq, -1, -2)
     random_scattering = pf.FrequencyData(
