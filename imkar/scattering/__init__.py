@@ -1,9 +1,9 @@
-from .coefficient import (
-    random_incidence,
+from .scattering import (
+    random,
     freefield
 )
 
 __all__ = [
     'freefield',
-    'random_incidence'
+    'random'
     ]
