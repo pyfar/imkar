@@ -7,4 +7,4 @@ according to their modules.
 .. toctree::
    :maxdepth: 1
 
-   modules/imkar.scattering.coefficient
+   modules/imkar.scattering
