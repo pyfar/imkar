@@ -5,7 +5,7 @@
 import pytest
 
 
-from imkar import imkar  # noqa
+from imkar import imkar
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def response():
     # return requests.get('https://github.com/mberz/cookiecutter-pypackage')
 
 
-def test_content(response):  # noqa
+def test_content(response):
     """Sample pytest test function with the pytest fixture as an argument."""
     # from bs4 import BeautifulSoup
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
