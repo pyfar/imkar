@@ -1,5 +1,6 @@
 import numpy as np
 import pyfar as pf
+from imkar import utils
 
 
 def freefield(sample_pressure, reference_pressure, microphone_weights):
@@ -122,22 +123,7 @@ def random(
     random_scattering : pyfar.FrequencyData
         The random-incidence scattering coefficient.
     """
-    if not isinstance(scattering_coefficients, pf.FrequencyData):
-        raise ValueError("scattering_coefficients has to be FrequencyData")
-    if not isinstance(incident_directions, pf.Coordinates):
-        raise ValueError("incident_directions have to be None or Coordinates")
-    if incident_directions.cshape[0] != scattering_coefficients.cshape[-1]:
-        raise ValueError(
-            "the last dimension of scattering_coefficients need be same as "
-            "the incident_directions.cshape.")
-
-    theta = incident_directions.get_sph().T[1]
-    weight = np.cos(theta) * incident_directions.weights
-    norm = np.sum(weight)
-    coefficients = np.swapaxes(scattering_coefficients.freq, -1, -2)
-    random_scattering = pf.FrequencyData(
-        np.sum(coefficients*weight/norm, axis=-1),
-        scattering_coefficients.frequencies,
-        comment='random-incidence scattering coefficient'
-    )
+    random_scattering = utils.paris_formula(
+        scattering_coefficients, incident_directions)
+    random_scattering.comment = 'random-incidence scattering coefficient'
     return random_scattering

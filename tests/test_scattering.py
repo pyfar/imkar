@@ -123,25 +123,13 @@ def test_freefield_05_with_inci(
     (0), (0.2), (0.5), (0.8), (1)])
 @pytest.mark.parametrize("frequencies",  [
     ([100, 200]), ([100])])
-def test_random_constant_s(
+def test_random_comment(
         s_value, frequencies, half_sphere):
     incident_directions = half_sphere
     shape = np.append(half_sphere.cshape, len(frequencies))
     s = pf.FrequencyData(np.zeros(shape)+s_value, frequencies)
     s_rand = scattering.random(s, incident_directions)
     np.testing.assert_allclose(s_rand.freq, s_value)
+    assert s_rand.comment == 'random-incidence scattering coefficient'
 
 
-def test_random_non_constant_s():
-    data = pf.samplings.sph_gaussian(10)
-    incident_directions = data[data.get_sph().T[1] <= np.pi/2]
-    incident_cshape = incident_directions.cshape
-    s_value = np.arange(
-        incident_cshape[0]).reshape(incident_cshape) / incident_cshape[0]
-    theta = incident_directions.get_sph().T[1]
-    actual_weight = np.cos(theta) * incident_directions.weights
-    actual_weight /= np.sum(actual_weight)
-    s = pf.FrequencyData(s_value.reshape((50, 1)), [100])
-    s_rand = scattering.random(s, incident_directions)
-    desired = np.sum(s_value*actual_weight)
-    np.testing.assert_allclose(s_rand.freq, desired)

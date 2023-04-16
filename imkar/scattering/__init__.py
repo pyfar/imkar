@@ -1,9 +1,9 @@
 from .scattering import (
+    freefield,
     random,
-    freefield
 )
 
 __all__ = [
     'freefield',
-    'random'
+    'random',
     ]
