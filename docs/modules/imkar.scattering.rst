@@ -1,7 +1,7 @@
-imkar.analytical
+imkar.scattering
 ================
 
-.. automodule:: imkar.analytical
+.. automodule:: imkar.scattering
    :members:
    :undoc-members:
    :show-inheritance:

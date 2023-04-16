@@ -35,10 +35,11 @@ def rectangular(frequencies, phis, width, length, height, c=343):
 
     References
     ----------
-    .. [#]J. Embrechts and A. Billon, "Theoretical Determination of the Random-
-    Incidence Scattering Coefficients of Infinite Rigid Surfaces with a
-    Periodic Rectangular Roughness Profile", Acta Acustica united with
-    Acustica, Bd. 97, Nr. 4, S. 607-617, Juli 2011, doi:10.3813/AAA.918441
+    .. [#]  J. Embrechts and A. Billon, "Theoretical Determination of the
+            Random-Incidence Scattering Coefficients of Infinite Rigid
+            Surfaces with a Periodic Rectangular Roughness Profile",
+            Acta Acustica united with Acustica, Bd. 97, Nr. 4, S. 607-617,
+            Juli 2011, doi:10.3813/AAA.918441
 
     Comment
     -------
