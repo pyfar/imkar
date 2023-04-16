@@ -131,5 +131,3 @@ def test_random_comment(
     s_rand = scattering.random(s, incident_directions)
     np.testing.assert_allclose(s_rand.freq, s_value)
     assert s_rand.comment == 'random-incidence scattering coefficient'
-
-
