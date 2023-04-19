@@ -119,8 +119,6 @@ def sinusoid(frequencies, incident_angle, theta, length=0.177, height=0.051,
         s_coeff[iPhis,:] = sPhi
     s_coeff = np.column_stack(s_coeff, sPhi)
 
-    return pf.FrequencyData(np.transpose(s_coeff), frequencies)
-
     # helping functions
     # -------------------------------------------------------------------------
     def alpha(n, alpha0, k, k_theta, k_structural):
@@ -190,4 +188,4 @@ def sinusoid(frequencies, incident_angle, theta, length=0.177, height=0.051,
 
         return W
 
-    return 0
+    return pf.FrequencyData(np.transpose(s_coeff), frequencies)
