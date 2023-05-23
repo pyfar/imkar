@@ -21,7 +21,7 @@ def paris_formula(coefficients, incident_directions):
         needs to be (..., #incident_directions)
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `coefficients` in a
-        Coordinates object. Its cshape need to be (#incident_directions). In
+        Coordinates object. Its cshape needs to be (#incident_directions). In
         sperical coordinates the radii need to be constant. The weights need
         to reflect the area weights.
 
