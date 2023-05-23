@@ -18,7 +18,7 @@ def paris_formula(coefficients, incident_directions):
     ----------
     coefficients : pyfar.FrequencyData
         coefficients for different incident directions. Its cshape
-        need to be (..., #incident_directions)
+        needs to be (..., #incident_directions)
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `coefficients` in a
         Coordinates object. Its cshape need to be (#incident_directions). In
