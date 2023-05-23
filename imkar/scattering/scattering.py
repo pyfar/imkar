@@ -25,7 +25,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
     ----------
     sample_pressure : pyfar.FrequencyData
         Reflected sound pressure or directivity of the test sample. Its cshape
-        need to be (..., #microphones).
+        needs to be (..., #microphones).
     reference_pressure : pyfar.FrequencyData
         Reflected sound pressure or directivity of the
         reference sample. Needs to have the same cshape and frequencies as
@@ -64,7 +64,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
             "same cshape.")
     if microphone_weights.shape[0] != sample_pressure.cshape[-1]:
         raise ValueError(
-            "the last dimension of sample_pressure need be same as the "
+            "the last dimension of sample_pressure needs be same as the "
             "microphone_weights.shape.")
     if not np.allclose(
             sample_pressure.frequencies, reference_pressure.frequencies):
@@ -97,7 +97,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
 def random(
         scattering_coefficients, incident_directions):
     r"""Calculate the random-incidence scattering coefficient
-    according to Paris formula.
+    according to Paris formula [2]_.
 
     .. math::
         s_{rand} = \sum s(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
@@ -111,17 +111,22 @@ def random(
     ----------
     scattering_coefficients : pyfar.FrequencyData
         Scattering coefficients for different incident directions. Its cshape
-        need to be (..., #source_directions)
+        needs to be (..., #source_directions)
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `scattering_coefficients` in a
-        Coordinates object. Its cshape need to be (#source_directions). In
-        sperical coordinates the radii need to be constant. The weights need
+        Coordinates object. Its cshape needs to be (#source_directions). In
+        sperical coordinates the radii needs to be constant. The weights need
         to reflect the area weights.
 
     Returns
     -------
     random_scattering : pyfar.FrequencyData
         The random-incidence scattering coefficient.
+
+    References
+    ----------
+    .. [2]  H. Kuttruff, Room acoustics, Sixth edition. Boca Raton:
+            CRC Press/Taylor & Francis Group, 2017.
     """
     random_scattering = utils.paris_formula(
         scattering_coefficients, incident_directions)

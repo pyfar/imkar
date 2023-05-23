@@ -4,7 +4,7 @@ import pyfar as pf
 
 def paris_formula(coefficients, incident_directions):
     r"""Calculate the random-incidence coefficient
-    according to Paris formula.
+    according to Paris formula [2]_.
 
     .. math::
         c_{rand} = \sum c(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
@@ -22,13 +22,18 @@ def paris_formula(coefficients, incident_directions):
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `coefficients` in a
         Coordinates object. Its cshape needs to be (#incident_directions). In
-        sperical coordinates the radii need to be constant. The weights need
+        sperical coordinates the radii needs to be constant. The weights need
         to reflect the area weights.
 
     Returns
     -------
     random_coefficient : pyfar.FrequencyData
         The random-incidence scattering coefficient.
+
+    References
+    ----------
+    .. [2]  H. Kuttruff, Room acoustics, Sixth edition. Boca Raton:
+            CRC Press/Taylor & Francis Group, 2017.
     """
     if not isinstance(coefficients, pf.FrequencyData):
         raise ValueError("coefficients has to be FrequencyData")
@@ -36,7 +41,7 @@ def paris_formula(coefficients, incident_directions):
         raise ValueError("incident_directions have to be None or Coordinates")
     if incident_directions.cshape[0] != coefficients.cshape[-1]:
         raise ValueError(
-            "the last dimension of coefficients need be same as "
+            "the last dimension of coefficients needs be same as "
             "the incident_directions.cshape.")
 
     theta = incident_directions.get_sph().T[1]
