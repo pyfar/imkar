@@ -96,7 +96,8 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
 
 def random(
         scattering_coefficients, incident_directions):
-    r"""Calculate the random-incidence scattering coefficient
+    r"""
+    Calculate the random-incidence scattering coefficient
     according to Paris formula [2]_.
 
     .. math::

@@ -3,7 +3,8 @@ import pyfar as pf
 
 
 def paris_formula(coefficients, incident_directions):
-    r"""Calculate the random-incidence coefficient
+    r"""
+    Calculate the random-incidence coefficient
     according to Paris formula [2]_.
 
     .. math::
