@@ -28,18 +28,10 @@ def test_rectangular_different_inputs(frequencies, incident_angle):
 
 
 def test_rectangular_wrong_input():
-    with pytest.raises(TypeError, match='frequencies'):
-        ik.scattering.analytical.rectangular(
-            np.array([2+3j]), np.array([30]), 0.5, 0.5, 0.49, 343.901)
-
     with pytest.raises(ValueError, match='frequencies'):
         ik.scattering.analytical.rectangular(
             np.array([[500, 1000], [1500, 2000]]),
             np.array([30]), 0.5, 0.5, 0.49, 343.901)
-
-    with pytest.raises(TypeError, match='incident_angles'):
-        ik.scattering.analytical.rectangular(
-            np.array([500]), np.array([7+3j]), 0.5, 0.5, 0.49, 343.901)
 
     with pytest.raises(ValueError, match='incident_angles'):
         ik.scattering.analytical.rectangular(

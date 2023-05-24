@@ -53,9 +53,6 @@ def rectangular(frequencies, incident_angles, rectangle_width, gap_width,
 
     # check inputs
     frequencies = np.atleast_1d(np.asarray(frequencies, dtype=float))
-    if not isinstance(frequencies, np.ndarray) or\
-            not isinstance(frequencies.item(0), numbers.Real):
-        raise TypeError("frequencies has to be an array of real numbers")
     if frequencies.ndim > 1:
         raise ValueError("frequencies has to be 1-dimensional")
 
