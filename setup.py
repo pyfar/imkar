@@ -10,7 +10,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = []
+requirements = [ ]
 
 test_requirements = ['pytest>=3', ]
 
@@ -28,8 +28,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    description="A python package for material modeling and\
-      quantification in acoustics.",
+    description="A python package for material modeling and quantification in acoustics.",
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,

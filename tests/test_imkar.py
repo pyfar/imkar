@@ -5,12 +5,13 @@
 import pytest
 
 
-# from imkar import imkar
+from imkar import imkar
 
 
 @pytest.fixture
 def response():
     """Sample pytest fixture.
+
     See more at: http://doc.pytest.org/en/latest/fixture.html
     """
     # import requests
