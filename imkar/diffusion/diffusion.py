@@ -1,5 +1,6 @@
 import numpy as np
 import pyfar as pf
+from imkar import utils
 
 
 def freefield(sample_pressure, microphone_weights):
@@ -87,3 +88,44 @@ def freefield(sample_pressure, microphone_weights):
     diffusion_coefficients.comment = 'diffusion coefficients'
 
     return diffusion_coefficients
+
+
+def random(
+        random_diffusions, incident_directions):
+    r"""
+    Calculate the random-incidence scattering coefficient
+    according to Paris formula [2]_.
+
+    .. math::
+        d_{rand} = \sum d(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
+
+    with the ``random_diffusions``, and the
+    area weights ``w`` from the ``incident_directions``.
+    Note that the incident directions should be
+    equally distributed to get a valid result.
+
+    Parameters
+    ----------
+    random_diffusions : pyfar.FrequencyData
+        Diffusion coefficients for different incident directions. Its cshape
+        needs to be (..., #source_directions)
+    incident_directions : pyfar.Coordinates
+        Defines the incidence directions of each `random_diffusions` in a
+        Coordinates object. Its cshape needs to be (#source_directions). In
+        sperical coordinates the radii needs to be constant. The weights need
+        to reflect the area weights.
+
+    Returns
+    -------
+    random_diffusion : pyfar.FrequencyData
+        The random-incidence diffusion coefficient.
+
+    References
+    ----------
+    .. [2]  H. Kuttruff, Room acoustics, Sixth edition. Boca Raton:
+            CRC Press/Taylor & Francis Group, 2017.
+    """
+    random_diffusion = utils.paris_formula(
+        random_diffusions, incident_directions)
+    random_diffusion.comment = 'random-incidence diffusion coefficient'
+    return random_diffusion

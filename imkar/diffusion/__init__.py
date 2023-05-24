@@ -1,4 +1,4 @@
-from .coefficient import (
+from .diffusion import (
     freefield,
 )
 

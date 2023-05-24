@@ -6,3 +6,4 @@ __version__ = '0.1.0'
 
 
 from . import diffusion  # noqa
+from . import utils  # noqa
