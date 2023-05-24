@@ -17,9 +17,9 @@ def test_rectangular_under_30_degree():
 
 
 @pytest.mark.parametrize("frequencies",  [
-    ([343.901 * 4, 343.901 * 8]), ([100]), np.array([343.901 * 4])])
+    ([100, 200]), ([100]), np.array([100])])
 @pytest.mark.parametrize("incident_angle",  [
-    ([30, 30]), ([30]), np.array([30])])
+    ([30, 40]), ([30]), np.array([30])])
 def test_rectangular_different_inputs(frequencies, incident_angle):
     # Test compares the directional scattering coefficient under 30° with
     # the one shown in Figure 2 in Embrechts et al.
