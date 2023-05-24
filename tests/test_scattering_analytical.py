@@ -12,8 +12,19 @@ def test_rectangular_under_30_degree():
     result = ik.scattering.analytical.rectangular(
         x*c_over_L, np.array([30]), 0.50, 0.50, 0.49, 343.901)
     actual = np.reshape(np.array(
-        [[0.82], [0.11], [0.75], [0.67], [0.48]]), (1, 5))
+        [0.82, 0.11, 0.75, 0.67, 0.48]), (1, 5))
     np.testing.assert_allclose(result.freq, actual, atol=1e-2)
+
+
+@pytest.mark.parametrize("frequencies",  [
+    ([343.901 * 4, 343.901 * 8]), ([100]), np.array([343.901 * 4])])
+@pytest.mark.parametrize("incident_angle",  [
+    ([30, 30]), ([30]), np.array([30])])
+def test_rectangular_different_inputs(frequencies, incident_angle):
+    # Test compares the directional scattering coefficient under 30° with
+    # the one shown in Figure 2 in Embrechts et al.
+    ik.scattering.analytical.rectangular(
+        frequencies, incident_angle, 0.50, 0.50, 0.49, 343.901)
 
 
 def test_rectangular_wrong_input():

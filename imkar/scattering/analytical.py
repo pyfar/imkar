@@ -51,18 +51,19 @@ def rectangular(frequencies, incident_angles, rectangle_width, gap_width,
     """
 
     # check inputs
+    frequencies = np.atleast_1d(np.asarray(frequencies, dtype=float))
     if not isinstance(frequencies, np.ndarray) or\
             not isinstance(frequencies.item(0), numbers.Real):
         raise TypeError("frequencies has to be an array of real numbers")
     if frequencies.ndim > 1:
         raise ValueError("frequencies has to be 1-dimensional")
-    if not isinstance(incident_angles, np.ndarray) or \
-            not isinstance(incident_angles.item(0), numbers.Real):
-        raise TypeError("incident_angles has to be an array of real numbers")
+
+    incident_angles = np.atleast_1d(np.asarray(incident_angles, dtype=float))
     if incident_angles.ndim > 1:
         raise ValueError("incident_angles has to be 1-dimensional")
     if (np.any(incident_angles <= 0)) or (np.any(incident_angles >= 90)):
         raise ValueError("incident_angles have to be between 0° and 90°")
+
     if not isinstance(rectangle_width, numbers.Real) or rectangle_width <= 0:
         raise TypeError("rectangle_width has to be a real number >0")
     if not isinstance(gap_width, numbers.Real) or gap_width <= 0:
