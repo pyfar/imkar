@@ -5,12 +5,12 @@ import numbers
 
 
 def rectangular(frequencies, incident_angles, rectangle_width, gap_width,
-                height, speed_of_sound=343):
+                height, speed_of_sound=346.18):
     """
     This function computes the scattering coefficient of periodic rectangular
     profiles, assuming that the extent is infinite.
 
-    This function is based on Ducourneau's method described by Prof. Embrechts
+    This function is based on Ducourneau's method described by Embrechts
     [#]_.
 
     Parameters
@@ -27,7 +27,8 @@ def rectangular(frequencies, incident_angles, rectangle_width, gap_width,
     height : float
         Height of the profile structure in m.
     speed_of_sound : float
-        Speed of sound with which the scattering coefficient is computed.
+        Speed of sound in m/s with which the scattering coefficient is
+        computed. Default is 346.18 m/s like in Mesh2HRTF.
     Returns
     -------
     scattering_coefficient : FrequencyData
