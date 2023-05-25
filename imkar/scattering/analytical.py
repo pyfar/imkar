@@ -189,3 +189,35 @@ def sinusoid(frequencies, incident_angle, theta, length=0.177, height=0.051,
         return W
 
     return pf.FrequencyData(np.transpose(s_coeff), frequencies)
+
+
+def holford_urusovskii_method(ms, ns, Lambda, h, xi, dxi, k, Phi_0):
+
+    pi = np.pi
+    K = 2 * pi / Lambda
+    # integral one in Formula A1
+    rho = lambda x, tau: np.sqrt(tau**2 + (xi(x + tau) - xi(x)**2))
+    term_fac = lambda x, tau: 1j*k/(2*rho(x, tau))
+    term_hankel = lambda x, tau: hankel1(1, k*rho(x, tau))
+    term_xi = lambda x, tau: xi(x+tau) - xi(x) + tau*dxi(x)
+    A = np.max((200*k*h**2, 40))
+    print(A)
+    U_m_n = np.zeros((len(ms), len(ns)))
+    for i_m in range(len(ms)):
+        m = ms[i_m]
+        alpha_m = np.cos(Phi_0) + m * K/k
+        term_exp2 = lambda x, tau: 2 / Lambda * np.exp(-1j*k*alpha_m*tau)
+        W = (1j*h*K)/(1-alpha_m**2) * np.sqrt(1j*(k*A - 0.75*pi)) * (
+            alpha_m*np.cos(k*A*alpha_m) - 1j*np.sin(k*A*alpha_m))
+        for i_n in range(len(ns)):
+            n = ns[i_n]
+            term_exp1 = lambda x: np.exp(-1j*(m-n)*K*x)
+            V = integrate.dblquad(
+                lambda x, tau: term_exp1(x) * term_fac(x, tau) *
+                term_hankel(x, tau) * term_xi(x, tau) * term_exp2(x, tau),
+                0, Lambda, lambda tau: -A, lambda tau: A)
+
+            print(V+W)
+            U_m_n[i_m, i_n] = V+W
+
+    return U_m_n
