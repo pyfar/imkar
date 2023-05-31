@@ -32,6 +32,8 @@ def test_same_result_for_increasing_A():
 
 
 def test_sine():
+    # test scattering coefficient with results in paper
+    
     f = [
         1.029559118236473e+03, 1.097194388777555e+03, 1.886272545090180e+03,
         2.171843687374749e+03, 3.021042084168336e+03]
