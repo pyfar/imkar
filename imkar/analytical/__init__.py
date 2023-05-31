@@ -1,4 +1,4 @@
-from .analytical import (rectangular)
+from .analytical import (sinusoid)
 
 
 __all__ = [
