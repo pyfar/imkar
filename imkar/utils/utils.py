@@ -21,13 +21,14 @@ def paris_formula(coefficients, incident_directions):
 
     Parameters
     ----------
-    coefficients : pyfar.FrequencyData
+    coefficients : :py:class:`~pyfar.classes.audio.FrequencyData`
         Scattering coefficients for different incident directions. Its cshape
         needs to be (..., `incident_directions.csize`)
-    incident_directions : pyfar.Coordinates
-        Defines the incidence directions of each `coefficients` in a
-        pyfar.Coordinates object. Its cshape needs to match the last dimension
-        of coefficients.
+    incident_directions : :py:class:`~pyfar.classes.coordinates.Coordinates`
+        Defines the incidence directions of each `scattering_coefficients`
+        in a :py:class:`~pyfar.classes.coordinates.Coordinates` object.
+        Its cshape needs to match
+        the last dimension of `scattering_coefficients`.
         Points contained in `incident_directions` must have the same radii.
         The weights need to reflect the area ``incident_directions.weights``.
 

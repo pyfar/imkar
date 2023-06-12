@@ -31,10 +31,10 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
 
     Parameters
     ----------
-    sample_pressure : pyfar.FrequencyData
+    sample_pressure : :py:class:`~pyfar.classes.audio.FrequencyData`
         Reflected sound pressure or directivity of the test sample. Its cshape
         needs to be (..., microphone_weights.csize).
-    reference_pressure : pyfar.FrequencyData
+    reference_pressure : :py:class:`~pyfar.classes.audio.FrequencyData`
         Reflected sound pressure or directivity of the
         reference sample. Needs to have the same cshape and frequencies as
         `sample_pressure`.
@@ -45,7 +45,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
 
     Returns
     -------
-    scattering_coefficients : pyfar.FrequencyData
+    scattering_coefficients : :py:class:`~pyfar.classes.audio.FrequencyData`
         The scattering coefficient for each incident direction depending on
         frequency.
 
@@ -123,19 +123,20 @@ def random(
 
     Parameters
     ----------
-    scattering_coefficients : pyfar.FrequencyData
+    scattering_coefficients : :py:class:`~pyfar.classes.audio.FrequencyData`
         Scattering coefficients for different incident directions. Its cshape
         needs to be (..., incident_directions.csize)
-    incident_directions : pyfar.Coordinates
+    incident_directions : :py:class:`~pyfar.classes.coordinates.Coordinates`
         Defines the incidence directions of each `scattering_coefficients`
-        in a :py:class:`~pyfar.Coordinates` object. Its cshape needs to match
+        in a :py:class:`~pyfar.classes.coordinates.Coordinates` object.
+        Its cshape needs to match
         the last dimension of `scattering_coefficients`.
         Points contained in `incident_directions` must have the same radii.
         The weights need to reflect the area `incident_directions.weights`.
 
     Returns
     -------
-    random_scattering : pyfar.FrequencyData
+    random_scattering : :py:class:`~pyfar.classes.audio.FrequencyData`
         The random-incidence scattering coefficient depending on frequency.
 
     References
