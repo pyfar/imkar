@@ -14,7 +14,7 @@ def paris_formula(coefficients, incident_directions):
         w(\vartheta,\varphi)
 
     with the coefficients :math:`c(\vartheta,\varphi)`, the area
-    weights ``w`` from the ``incident_directions.weights``,
+    weights ``w`` from the `incident_directions.weights`,
     and :math:`\vartheta` and :math:`\varphi` are the incidence
     angle and azimuth angles. Note that the incident directions should be
     equally distributed to get a valid result.
@@ -23,12 +23,12 @@ def paris_formula(coefficients, incident_directions):
     ----------
     coefficients : pyfar.FrequencyData
         Scattering coefficients for different incident directions. Its cshape
-        needs to be (..., incident_directions.csize)
+        needs to be (..., `incident_directions.csize`)
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `coefficients` in a
         pyfar.Coordinates object. Its cshape needs to match the last dimension
         of coefficients.
-        Points contained in ``incident_directions`` must have the same radii.
+        Points contained in `incident_directions` must have the same radii.
         The weights need to reflect the area ``incident_directions.weights``.
 
     Returns
