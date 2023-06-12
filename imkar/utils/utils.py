@@ -10,7 +10,8 @@ def paris_formula(coefficients, incident_directions):
     Uses the Paris formula [2]_.
 
     .. math::
-        c_{rand} = \sum c(\vartheta,\varphi) \cdot cos(\vartheta) \cdot w
+        c_{rand} = \sum c(\vartheta,\varphi) \cdot cos(\vartheta) \cdot
+        w(\vartheta,\varphi)
 
     with the coefficients :math:`c(\vartheta,\varphi)`, the area
     weights ``w`` from the ``incident_directions.weights``,

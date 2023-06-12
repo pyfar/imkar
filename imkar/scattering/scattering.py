@@ -12,10 +12,12 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
 
     .. math::
         s = 1 -
-            \frac{|\sum_w \underline{p}_{\text{sample}}(\vartheta,\varphi) \cdot
-            \underline{p}_{\text{reference}}^*(\vartheta,\varphi) \cdot w(\vartheta,\varphi)|^2}
-            {\sum_w |\underline{p}_{\text{sample}}(\vartheta,\varphi)|^2 \cdot w(\vartheta,\varphi)
-            \cdot \sum_w |\underline{p}_{\text{reference}}(\vartheta,\varphi)|^2
+            \frac{|\sum_w \underline{p}_{\text{sample}}(\vartheta,\varphi)
+            \cdot \underline{p}_{\text{reference}}^*(\vartheta,\varphi)
+            \cdot w(\vartheta,\varphi)|^2}
+            {\sum_w |\underline{p}_{\text{sample}}(\vartheta,\varphi)|^2
+            \cdot w(\vartheta,\varphi) \cdot \sum_w
+            |\underline{p}_{\text{reference}}(\vartheta,\varphi)|^2
             \cdot w(\vartheta,\varphi) }
 
     with the reflected sound pressure of the the sample under investigation
@@ -36,7 +38,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
         Reflected sound pressure or directivity of the
         reference sample. Needs to have the same cshape and frequencies as
         ``sample_pressure``.
-    microphone_weights : np.ndarray
+    microphone_weights : numpy.ndarray
         Array containing the area weights for the microphone positions.
         Its shape needs to match the last dimension in the cshape of
         ``sample_pressure`` and ``reference_pressure``.
@@ -108,7 +110,8 @@ def random(
     Uses the Paris formula [2]_.
 
     .. math::
-        s_{rand} = \sum s(\vartheta,\varphi) \cdot cos(\vartheta) \cdot w
+        s_{rand} = \sum s(\vartheta,\varphi) \cdot cos(\vartheta) \cdot
+        w(\vartheta,\varphi)
 
     with the scattering coefficients :math:`s(\vartheta,\varphi)`, the area
     weights ``w`` from the ``incident_directions.weights``,
@@ -123,9 +126,9 @@ def random(
         Scattering coefficients for different incident directions. Its cshape
         needs to be (..., incident_directions.csize)
     incident_directions : pyfar.Coordinates
-        Defines the incidence directions of each `scattering_coefficients` in a
-        pyfar.Coordinates object. Its cshape needs to match the last dimension
-        of scattering_coefficients.
+        Defines the incidence directions of each ``scattering_coefficients``
+        in a :py:class:`pyfar.Coordinates` object. Its cshape needs to match
+        the last dimension of ``scattering_coefficients``.
         Points contained in ``incident_directions`` must have the same radii.
         The weights need to reflect the area ``incident_directions.weights``.
 
