@@ -4,32 +4,36 @@ import pyfar as pf
 
 def paris_formula(coefficients, incident_directions):
     r"""
-    Calculate the random-incidence coefficient
-    according to Paris formula [2]_.
+    Calculate the random-incidence coefficient from free-field
+    data for several incident directions.
+
+    Uses the Paris formula [2]_.
 
     .. math::
-        c_{rand} = \sum c(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
+        c_{rand} = \sum c(\vartheta,\varphi) \cdot cos(\vartheta) \cdot w
 
-    with the ``coefficients``, and the
-    area weights ``w`` from the ``incident_directions``.
-    Note that the incident directions should be
+    with the coefficients :math:`c(\vartheta,\varphi)`, the area
+    weights ``w`` from the ``incident_directions.weights``,
+    and :math:`\vartheta` and :math:`\varphi` are the incidence
+    angle and azimuth angles. Note that the incident directions should be
     equally distributed to get a valid result.
 
     Parameters
     ----------
     coefficients : pyfar.FrequencyData
-        coefficients for different incident directions. Its cshape
-        needs to be (..., #incident_directions)
+        Scattering coefficients for different incident directions. Its cshape
+        needs to be (..., incident_directions.csize)
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `coefficients` in a
-        Coordinates object. Its cshape needs to be (#incident_directions). In
-        sperical coordinates the radii needs to be constant. The weights need
-        to reflect the area weights.
+        pyfar.Coordinates object. Its cshape needs to match the last dimension
+        of coefficients.
+        Points contained in ``incident_directions`` must have the same radii.
+        The weights need to reflect the area ``incident_directions.weights``.
 
     Returns
     -------
     random_coefficient : pyfar.FrequencyData
-        The random-incidence scattering coefficient.
+        The random-incidence coefficient depending on frequency.
 
     References
     ----------

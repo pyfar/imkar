@@ -5,40 +5,47 @@ from imkar import utils
 
 def freefield(sample_pressure, reference_pressure, microphone_weights):
     r"""
-    Calculate the free-field scattering coefficient for each incident direction
-    using the Mommertz correlation method [1]_:
+    Calculate the direction dependent free-field scattering coefficient.
+
+    Uses the Mommertz correlation method [1]_ to calculate the scattering
+    coefficient of the input data:
 
     .. math::
-        s(\vartheta_S,\varphi_S) = 1 -
-            \frac{|\sum \underline{p}_{sample}(\vartheta_R,\varphi_R) \cdot
-            \underline{p}_{reference}^*(\vartheta_R,\varphi_R) \cdot w|^2}
-            {\sum |\underline{p}_{sample}(\vartheta_R,\varphi_R)|^2 \cdot w
-            \cdot \sum |\underline{p}_{reference}(\vartheta_R,\varphi_R)|^2
-            \cdot w }
+        s = 1 -
+            \frac{|\sum_w \underline{p}_{\text{sample}}(\vartheta,\varphi) \cdot
+            \underline{p}_{\text{reference}}^*(\vartheta,\varphi) \cdot w(\vartheta,\varphi)|^2}
+            {\sum_w |\underline{p}_{\text{sample}}(\vartheta,\varphi)|^2 \cdot w(\vartheta,\varphi)
+            \cdot \sum_w |\underline{p}_{\text{reference}}(\vartheta,\varphi)|^2
+            \cdot w(\vartheta,\varphi) }
 
-    with the ``sample_pressure``, the ``reference_pressure``, and the
-    area weights ``weights_microphones``. See
-    :py:func:`random_incidence` to calculate the random incidence
+    with the reflected sound pressure of the the sample under investigation
+    :math:`\underline{p}_{\text{sample}}`, the reflected sound pressure from
+    the reference sample (same dimension as the sample under investigation,
+    but with flat surface) :math:`\underline{p}_{\text{reference}}`, the
+    area weights of the sampling :math:`w`, and :math:`\vartheta` and
+    :math:`\varphi` are the incidence angle and azimuth angles. See
+    :py:func:`random` to calculate the random incidence
     scattering coefficient.
 
     Parameters
     ----------
     sample_pressure : pyfar.FrequencyData
         Reflected sound pressure or directivity of the test sample. Its cshape
-        needs to be (..., #microphones).
+        needs to be (..., microphone_weights.csize).
     reference_pressure : pyfar.FrequencyData
         Reflected sound pressure or directivity of the
         reference sample. Needs to have the same cshape and frequencies as
-        `sample_pressure`.
+        ``sample_pressure``.
     microphone_weights : np.ndarray
         Array containing the area weights for the microphone positions.
-        Its shape needs to be (#microphones), so it matches the last dimension
-        in the cshape of `sample_pressure` and `reference_pressure`.
+        Its shape needs to match the last dimension in the cshape of
+        ``sample_pressure`` and ``reference_pressure``.
 
     Returns
     -------
     scattering_coefficients : pyfar.FrequencyData
-        The scattering coefficient for each incident direction.
+        The scattering coefficient for each incident direction depending on
+        frequency.
 
 
     References
@@ -56,8 +63,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
     if not isinstance(reference_pressure, pf.FrequencyData):
         raise ValueError(
             "reference_pressure has to be a pyfar.FrequencyData object")
-    if not isinstance(microphone_weights, np.ndarray):
-        raise ValueError("microphone_weights have to be a numpy.array")
+    microphone_weights = np.asarray(microphone_weights)
     if sample_pressure.cshape != reference_pressure.cshape:
         raise ValueError(
             "sample_pressure and reference_pressure have to have the "
@@ -89,7 +95,6 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
     scattering_coefficients = pf.FrequencyData(
         np.moveaxis(data_scattering_coefficient, 0, -1),
         sample_pressure.frequencies)
-    scattering_coefficients.comment = 'scattering coefficient'
 
     return scattering_coefficients
 
@@ -97,32 +102,37 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
 def random(
         scattering_coefficients, incident_directions):
     r"""
-    Calculate the random-incidence scattering coefficient
-    according to Paris formula [2]_.
+    Calculate the random-incidence scattering coefficient from free-field
+    data for several incident directions.
+
+    Uses the Paris formula [2]_.
 
     .. math::
-        s_{rand} = \sum s(\vartheta_S,\varphi_S) \cdot cos(\vartheta_S) \cdot w
+        s_{rand} = \sum s(\vartheta,\varphi) \cdot cos(\vartheta) \cdot w
 
-    with the ``scattering_coefficients``, and the
-    area weights ``w`` from the ``incident_directions``.
-    Note that the incident directions should be
-    equally distributed to get a valid result.
+    with the scattering coefficients :math:`s(\vartheta,\varphi)`, the area
+    weights ``w`` from the ``incident_directions.weights``,
+    and :math:`\vartheta` and :math:`\varphi` are the incidence
+    angle and azimuth angles. Note that the incident directions should be
+    equally distributed to get a valid result. See
+    :py:func:`freefield` to calculate the free-field scattering coefficient.
 
     Parameters
     ----------
     scattering_coefficients : pyfar.FrequencyData
         Scattering coefficients for different incident directions. Its cshape
-        needs to be (..., #source_directions)
+        needs to be (..., incident_directions.csize)
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `scattering_coefficients` in a
-        Coordinates object. Its cshape needs to be (#source_directions). In
-        sperical coordinates the radii needs to be constant. The weights need
-        to reflect the area weights.
+        pyfar.Coordinates object. Its cshape needs to match the last dimension
+        of scattering_coefficients.
+        Points contained in ``incident_directions`` must have the same radii.
+        The weights need to reflect the area ``incident_directions.weights``.
 
     Returns
     -------
     random_scattering : pyfar.FrequencyData
-        The random-incidence scattering coefficient.
+        The random-incidence scattering coefficient depending on frequency.
 
     References
     ----------
@@ -131,5 +141,4 @@ def random(
     """
     random_scattering = utils.paris_formula(
         scattering_coefficients, incident_directions)
-    random_scattering.comment = 'random-incidence scattering coefficient'
     return random_scattering
