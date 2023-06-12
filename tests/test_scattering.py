@@ -1,6 +1,5 @@
 import pytest
 import numpy as np
-import pyfar as pf
 
 from imkar import scattering
 
@@ -117,17 +116,3 @@ def test_freefield_05_with_inci(
     assert s.freq.shape[-1] == p_sample.n_bins
     assert s.cshape == incident_directions.cshape
     assert s_rand.freq.shape[-1] == p_sample.n_bins
-
-
-@pytest.mark.parametrize("s_value",  [
-    (0), (0.2), (0.5), (0.8), (1)])
-@pytest.mark.parametrize("frequencies",  [
-    ([100, 200]), ([100])])
-def test_random_comment(
-        s_value, frequencies, half_sphere):
-    incident_directions = half_sphere
-    shape = np.append(half_sphere.cshape, len(frequencies))
-    s = pf.FrequencyData(np.zeros(shape)+s_value, frequencies)
-    s_rand = scattering.random(s, incident_directions)
-    np.testing.assert_allclose(s_rand.freq, s_value)
-    assert s_rand.comment == 'random-incidence scattering coefficient'

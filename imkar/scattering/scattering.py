@@ -65,7 +65,8 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
     if not isinstance(reference_pressure, pf.FrequencyData):
         raise ValueError(
             "reference_pressure has to be a pyfar.FrequencyData object")
-    microphone_weights = np.asarray(microphone_weights)
+    microphone_weights = np.atleast_1d(
+        np.asarray(microphone_weights, dtype=float))
     if sample_pressure.cshape != reference_pressure.cshape:
         raise ValueError(
             "sample_pressure and reference_pressure have to have the "
