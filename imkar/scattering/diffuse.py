@@ -2,9 +2,9 @@ import pyfar as pf
 import numpy as np
 
 def diffuse(reverb_time, speed_of_sound, air_attenuation,
-             alpha_method = 'Eyring',scale_factor = 5, sample_area = 0.5027,
-                baseplate_area = 0.58088, surface_room = 9.05, 
-                    volume_room = 1.67):
+             calculation_method = 'ISO', scale_factor = 5,
+               sample_area = 0.5026548, baseplate_area = 0.58088,
+                 surface_room = 9.05, volume_room = 1.67):
     """
     This function calculates the diffuse scattering coefficient after the ISO
     17497-1 method. It uses four reverberation times measured under different
@@ -26,7 +26,7 @@ def diffuse(reverb_time, speed_of_sound, air_attenuation,
         Vector containing the air attenuation for every measurement condition
         calculated by temperature and air humidity during measurement time.
 
-    alpha_method : 'Eyring' or 'Sabine'
+    calculation_method : 'ISO','Eyring' or 'Sabine'
         Defines the method by which alpha is calculated.
 
     scale_factor : float
@@ -54,7 +54,8 @@ def diffuse(reverb_time, speed_of_sound, air_attenuation,
     -------
     scattering_coefficient : pf.FrequencyData
         The calculated solution for the diffuse scattering coefficient after
-        International Standard 17497-1:2004(E).
+        International Standard 17497-1:2004(E) and the scattering coefficient
+        of the base plate.
 
     References
     ----------
@@ -63,26 +64,57 @@ def diffuse(reverb_time, speed_of_sound, air_attenuation,
     # check inputs
 
 
-    # Scale frequencies
-    reverb_time[:,1] = reverb_time[:,1]/scale_factor
+    # start calculations
 
-    # random-incidence absorption coefficient
-    a_s = 55.3*volume_room/sample_area*(1/(speed_of_sound[1]*reverb_time[1])
-            -1/(speed_of_sound[0]*reverb_time[0]))-4*volume_room/sample_area* \
-                (air_attenuation[1]-air_attenuation[0])
+    if(calculation_method == "ISO"):
+        # random-incidence absorption coefficient
+        a_s = 55.3*volume_room/sample_area * \
+                (1/(speed_of_sound[1]*reverb_time.freq[1])
+                    -1/(speed_of_sound[0]*reverb_time.freq[0])) - \
+                        4*volume_room/sample_area* \
+                            (air_attenuation[1]-air_attenuation[0])
+        
+        # specular absorption coefficient
+        a_spec = 55.3*volume_room/sample_area * \
+                    (1/(speed_of_sound[3]*reverb_time.freq[3])
+                        -1/(speed_of_sound[2]*reverb_time.freq[2])) - \
+                            4*volume_room/sample_area * \
+                                (air_attenuation[3]-air_attenuation[2])
+        
+        # scattering coefficient for the base plate
+        s_base = 55.3*volume_room/sample_area * \
+                    (1/(speed_of_sound[2]*reverb_time.freq[2])
+                        -1/(speed_of_sound[0]*reverb_time.freq[0])) - \
+                            4*volume_room/sample_area * \
+                                (air_attenuation[2]-air_attenuation[0])
     
-    # specular absorption coefficient
-    a_spec = 55.3*volume_room/sample_area*(1/(speed_of_sound[3]*reverb_time[3])
-            -1/(speed_of_sound[2]*reverb_time[2]))-4*volume_room/sample_area* \
-                (air_attenuation[3]-air_attenuation[2])
-    
-    # scattering coefficient for the base plate
-    s_base = 55.3*volume_room/sample_area*(1/(speed_of_sound[2]*reverb_time[2])
-            -1/(speed_of_sound[0]*reverb_time[0]))-4*volume_room/sample_area* \
-                (air_attenuation[2]-air_attenuation[0])
-    
+    else:
+        # calculate equivalent surface area
+        A = np.zeros((4,7))
+        for i in range(0,4):
+            A[i] = volume_room * \
+                ((24*np.log(10))/(speed_of_sound[i]*reverb_time.freq[i])
+                    -4*air_attenuation[i])
+
+        # calculate alpha based on chosen method
+        if(calculation_method == "Eyring"):
+            alpha = 1-np.exp(-A/surface_room)
+        elif(calculation_method == "Sabine"):
+            alpha = A/surface_room
+
+        # random-incidence absorption coefficient
+        a_s = surface_room/sample_area*(alpha[1]-alpha[0])+alpha[0]
+
+        # specular absorption coefficient
+        a_spec = surface_room/sample_area*(alpha[3]-alpha[2])+alpha[2]
+
+        # scattering coefficient for the base plate
+        s_base = surface_room/baseplate_area*(alpha[2]-alpha[0]).clip(min=0)
+            
+
     # random-incidence scattering coefficient
-    scatterring_coefficient = 1-(1-a_spec)/(1-a_s)
+    scatterring_coefficient = (1-(1-a_spec)/(1-a_s)).clip(min=0)
 
-    return scatterring_coefficient
+    return pf.FrequencyData([scatterring_coefficient, s_base], 
+                            reverb_time.frequencies/scale_factor)
     
