@@ -66,15 +66,15 @@ def sinusoid(
     for i_freq in range(0, np.size(frequencies)):
         for i_coord in range(coordinates.csize):
             coord = coordinates[i_coord].get_sph().flatten()
-            azimuth = coord[0]
-            incident_angle = coord[1]
-            k_theta = k*np.sin(azimuth)  # account out-of-plane incidence
+            (theta_0, phi_0) = _convert_coordinates_to_angles(
+                coordinates[i_coord])
 
             # alpha_0 and gamma_0 after (2)
-            alpha_0 = np.cos(incident_angle)
-            gamma_0 = np.sin(incident_angle)
+            alpha_0 = np.cos(phi_0)
+            gamma_0 = np.sin(phi_0)
 
-            (alpha_n, n_valid) = _alpha_n(n_all, alpha_0, k[i_freq], K)
+            (alpha_n, n_valid) = _alpha_n(
+                n_all, alpha_0, k[i_freq]*np.cos(theta_0), K)
 
             if np.size(n_valid) == 0 or (np.size(n_valid) == 1 and n_valid == 0):
                 continue
@@ -125,6 +125,18 @@ def sinusoid(
             scattering_coefficient[i_coord, i_freq] = 1 - np.min(
                 (1, np.abs(R_0)**2))
     return pf.FrequencyData(scattering_coefficient, frequencies)
+
+
+def _convert_coordinates_to_angles(coordinates):
+    radius = coordinates.get_sph().T[2]
+    x = coordinates.get_cart().T[0]/radius
+    y = coordinates.get_cart().T[1]/radius
+    z = -coordinates.get_cart().T[2]/radius
+    theta_0 = np.arcsin(y)
+    phi_0 = np.arccos(x/np.cos(theta_0))
+    phi_0_ = np.arcsin(-z/np.cos(theta_0))
+    assert all(np.abs(phi_0/phi_0_) - 1 < 1e-5)
+    return (theta_0, phi_0)
 
 
 def _alpha_n(n, alpha_0, k, K):
