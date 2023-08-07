@@ -14,7 +14,7 @@ def paris_formula(coefficients, incident_directions):
         w(\vartheta,\varphi)
 
     with the coefficients :math:`c(\vartheta,\varphi)`, the area
-    weights ``w`` from the `incident_directions.weights`,
+    weights ``w`` taken from the `incident_directions.weights`,
     and :math:`\vartheta` and :math:`\varphi` are the incidence
     angle and azimuth angles. Note that the incident directions should be
     equally distributed to get a valid result.
