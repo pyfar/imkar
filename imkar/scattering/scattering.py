@@ -33,7 +33,7 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
     ----------
     sample_pressure : :py:class:`~pyfar.classes.audio.FrequencyData`
         Reflected sound pressure or directivity of the test sample. Its cshape
-        needs to be (..., microphone_weights.csize).
+        needs to be (..., microphone_weights.size).
     reference_pressure : :py:class:`~pyfar.classes.audio.FrequencyData`
         Reflected sound pressure or directivity of the
         reference sample. Needs to have the same cshape and frequencies as
