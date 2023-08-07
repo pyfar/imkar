@@ -25,7 +25,10 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
     the reference sample (same dimension as the sample under investigation,
     but with flat surface) :math:`\underline{p}_{\text{reference}}`, the
     area weights of the sampling :math:`w`, and :math:`\vartheta` and
-    :math:`\varphi` are the incidence angle and azimuth angles. See
+    :math:`\varphi` are the ``colatitude``
+    angle and ``azimuth`` angles from the
+    :py:class:`~pyfar.classes.coordinates.Coordinates` object.
+    In other words, the test sample lies in the x-y-plane. See
     :py:func:`random` to calculate the random incidence
     scattering coefficient.
 
@@ -39,7 +42,8 @@ def freefield(sample_pressure, reference_pressure, microphone_weights):
         reference sample. Needs to have the same cshape and frequencies as
         `sample_pressure`.
     microphone_weights : numpy.ndarray
-        Array containing the area weights for the microphone positions.
+        Array containing the area weights for the microphone positions,
+        no normalization required.
         Its shape needs to match the last dimension in the cshape of
         `sample_pressure` and `reference_pressure`.
 
@@ -116,8 +120,10 @@ def random(
 
     with the scattering coefficients :math:`s(\vartheta,\varphi)`, the area
     weights ``w`` taken from the `incident_directions.weights`,
-    and :math:`\vartheta` and :math:`\varphi` are the incidence
-    angle and azimuth angles. Note that the incident directions should be
+    and :math:`\vartheta` and :math:`\varphi` are the ``colatitude``
+    angle and ``azimuth`` angles from the
+    :py:class:`~pyfar.classes.coordinates.Coordinates` object.
+    Note that the incident directions should be
     equally distributed to get a valid result. See
     :py:func:`freefield` to calculate the free-field scattering coefficient.
 

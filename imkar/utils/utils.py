@@ -15,8 +15,10 @@ def paris_formula(coefficients, incident_directions):
 
     with the coefficients :math:`c(\vartheta,\varphi)`, the area
     weights ``w`` taken from the `incident_directions.weights`,
-    and :math:`\vartheta` and :math:`\varphi` are the incidence
-    angle and azimuth angles. Note that the incident directions should be
+    and :math:`\vartheta` and :math:`\varphi` are the ``colatitude``
+    angle and ``azimuth`` angles from the
+    :py:class:`~pyfar.classes.coordinates.Coordinates` object.
+    Note that the incident directions should be
     equally distributed to get a valid result.
 
     Parameters
@@ -34,7 +36,7 @@ def paris_formula(coefficients, incident_directions):
 
     Returns
     -------
-    random_coefficient : pyfar.FrequencyData
+    random_coefficient : :py:class:`~pyfar.classes.audio.FrequencyData`
         The random-incidence coefficient depending on frequency.
 
     References
