@@ -1,5 +1,12 @@
-from .analytical import (sinusoid)
+from .analytical import (
+    sinusoid,
+    cartesian_to_theta_phi,
+    theta_phi_to_cartesian,
+    )
 
 
 __all__ = [
-    'sinusoid']
+    'sinusoid',
+    'cartesian_to_theta_phi',
+    'theta_phi_to_cartesian',
+    ]
