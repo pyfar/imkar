@@ -5,7 +5,7 @@
 import pytest
 
 
-from imkar import imkar
+from imkar import imkar  # noqa: F401
 
 
 @pytest.fixture
