@@ -64,7 +64,10 @@ def diffuse(reverberation_time, speed_of_sound, air_attenuation,
 
     References
     ----------
-    ..[#]ISO 17497-1 First edition 2004-05-01
+    .. [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
+           Measurement of the random-incidence scattering coefficient in a
+           reverberation room. Geneva, Switzerland: International
+           Organization for Standards, 2004.
     """
     # check inputs
     if reverberation_time.cshape[-1] != 4:
