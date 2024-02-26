@@ -38,6 +38,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
     'sphinx.ext.mathjax',
+    'sphinx.ext.intersphinx',
     'autodocsumm']
 
 # show tocs for classes and functions of modules using the autodocsumm
@@ -98,6 +99,14 @@ todo_include_todos = False
 
 # default language for highlighting in source code
 highlight_language = "python3"
+
+# intersphinx mapping
+intersphinx_mapping = {
+    'numpy': ('https://numpy.org/doc/stable/', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/', None),
+    'matplotlib': ('https://matplotlib.org/stable/', None),
+    'pyfar': ('https://pyfar.readthedocs.io/en/stable/', None)
+    }
 
 # -- Options for HTML output -------------------------------------------
 
