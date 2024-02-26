@@ -66,34 +66,32 @@ jobs:
           pip-dependency-file: requirements_dev.txt
       - run:
           name: Flake8
-          command: flake8 imkar tests
+          command: flake8 imkar
 
+#   test_examples:
+#     parameters:
+#       version:
+#         description: "version tag"
+#         default: "latest"
+#         type: string
+#     executor:
+#       name: python-docker
+#       version: <<parameters.version>>
 
-  test_documentation_build:
-    parameters:
-      version:
-        description: "version tag"
-        default: "latest"
-        type: string
-    executor:
-      name: python-docker
-      version: <<parameters.version>>
-
-    steps:
-      - checkout
-   #    - run:
-   #        name: Install System Dependencies
-   #        command: sudo apt-get update && sudo apt-get install -y libsndfile1 texlive-latex-extra dvipng
-      - python/install-packages:
-          pkg-manager: pip
-          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
-          pip-dependency-file: requirements_dev.txt
-      - run:
-          name: Sphinx
-          command: |
-            pip install -e .
-            cd docs/
-            make html SPHINXOPTS="-W"
+#     steps:
+#       - checkout
+#     #   - run:
+#     #       name: Install System Dependencies
+#     #       command: sudo apt-get update && sudo apt-get install -y libsndfile1
+#       - python/install-packages:
+#           pkg-manager: pip
+#           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
+#           pip-dependency-file: requirements_dev.txt
+#       - run:
+#           name: Examples
+#           command: |
+#             pip install -e .
+#             pytest --nbmake examples/*.ipynb
 
   test_pypi_publish:
     parameters:
@@ -130,12 +128,9 @@ workflows:
           matrix:
             parameters:
               version:
-              - "3.8"
-              - "3.9"
-              - "3.10"
-              - "3.11"
-              - "3.12"
-              
+                - "3.8"
+                - "3.9"
+                - "3.10"
       - flake:
           matrix:
             parameters:
@@ -144,14 +139,13 @@ workflows:
           requires:
             - build_and_test
 
-
-      - test_documentation_build:
-          matrix:
-            parameters:
-              version:
-                - "3.9"
-          requires:
-            - build_and_test
+    #   - test_examples:
+    #       matrix:
+    #         parameters:
+    #           version:
+    #             - "3.9"
+    #       requires:
+    #         - build_and_test
 
 
 test_and_publish:
@@ -162,12 +156,9 @@ test_and_publish:
           matrix:
             parameters:
               version:
-              - "3.8"
-              - "3.9"
-              - "3.10"
-              - "3.11"
-              - "3.12"
-              
+                - "3.8"
+                - "3.9"
+                - "3.10"
           filters:
             branches:
               ignore: /.*/
@@ -189,19 +180,19 @@ test_and_publish:
             tags:
               only: /^v[0-9]+(\.[0-9]+)*$/
 
-      - test_documentation_build:
-          matrix:
-            parameters:
-              version:
-                - "3.9"
-          requires:
-            - build_and_test
-          filters:
-            branches:
-              ignore: /.*/
-            # only act on version tags
-            tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
+    #   - test_examples:
+    #       matrix:
+    #         parameters:
+    #           version:
+    #             - "3.9"
+    #       requires:
+    #         - build_and_test
+    #       filters:
+    #         branches:
+    #           ignore: /.*/
+    #         # only act on version tags
+    #         tags:
+    #           only: /^v[0-9]+(\.[0-9]+)*$/
 
       - test_pypi_publish:
           matrix:
@@ -211,7 +202,7 @@ test_and_publish:
           requires:
             - build_and_test
             - flake
-            - test_documentation_build
+            # - test_examples
           filters:
             branches:
               ignore: /.*/

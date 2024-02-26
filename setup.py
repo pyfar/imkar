@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """The setup script."""
 
@@ -11,63 +10,35 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-'numpy',
-'scipy',
-'matplotlib',
-'pyfar',
-]
+requirements = [ ]
 
-setup_requirements = [
-    'pytest-runner',
-]
-
-test_requirements = [
-    'pytest',
-    'bump2version',
-    'wheel',
-    'watchdog',
-    'flake8',
-    'coverage',
-    'Sphinx',
-    'twine'
-]
+test_requirements = ['pytest>=3', ]
 
 setup(
     author="The pyfar developers",
     author_email='info@pyfar.org',
+    python_requires='>=3.8',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Science/Research',
+        'Intended Audience :: Scientists',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        
     ],
     description="A python package for material modeling and quantification in acoustics.",
     install_requires=requirements,
     license="MIT license",
-    long_description=readme,
+    long_description=readme + '\n\n' + history,
     include_package_data=True,
     keywords='imkar',
     name='imkar',
-    packages=find_packages(),
-    setup_requires=setup_requirements,
+    packages=find_packages(include=['imkar', 'imkar.*']),
     test_suite='tests',
     tests_require=test_requirements,
-    url="https://pyfar.org/",
-    download_url="https://pypi.org/project/imkar/",
-    project_urls={
-        "Bug Tracker": "https://github.com/pyfar/imkar/issues",
-        "Documentation": "https://imkar.readthedocs.io/",
-        "Source Code": "https://github.com/pyfar/imkar",
-    },
+    url='https://github.com/pyfar/imkar',
     version='0.1.0',
     zip_safe=False,
-    python_requires='>=3.8',
 )
