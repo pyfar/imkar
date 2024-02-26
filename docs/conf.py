@@ -22,7 +22,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-import imkar
+import imkar  # noqa
 
 # -- General configuration ---------------------------------------------
 
@@ -37,11 +37,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
-    'matplotlib.sphinxext.plot_directive',
     'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx',
-    'autodocsumm',
-    ]
+    'autodocsumm']
 
 # show tocs for classes and functions of modules using the autodocsumm
 # package
@@ -65,7 +63,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'imkar'
-copyright = "2024, The pyfar developers"
+copyright = "2022, The pyfar developers"
 author = "The pyfar developers"
 
 # The version info for the project you're documenting, acts as replacement
@@ -104,17 +102,10 @@ highlight_language = "python3"
 
 # intersphinx mapping
 intersphinx_mapping = {
-<<<<<<< HEAD
     'numpy': ('https://numpy.org/doc/stable/', None),
     'scipy': ('https://docs.scipy.org/doc/scipy/', None),
     'matplotlib': ('https://matplotlib.org/stable/', None),
     'pyfar': ('https://pyfar.readthedocs.io/en/stable/', None)
-=======
-'numpy': ('https://numpy.org/doc/stable/', None),
-'scipy': ('https://docs.scipy.org/doc/scipy/', None),
-'matplotlib': ('https://matplotlib.org/stable/', None),
-'pyfar': ('https://pyfar.readthedocs.io/en/stable/', None),
->>>>>>> cookiecutter
     }
 
 # -- Options for HTML output -------------------------------------------
@@ -196,4 +187,3 @@ texinfo_documents = [
      'One line description of project.',
      'Miscellaneous'),
 ]
-
