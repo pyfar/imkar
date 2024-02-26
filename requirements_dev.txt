@@ -12,4 +12,4 @@ numpy
 scipy
 pyfar
 autodocsumm
-insipid-sphinx-theme
+pydata-sphinx-theme
