@@ -141,7 +141,7 @@ folders_in = [
     '_static/css/custom.css',
     '_static/favicon.ico',
     '_static/header.rst',
-    'resources/logos/pyfar_logos_fixed_size_pyfar.png',
+    'resources/logos/pyfar_logos_fixed_size_imkar.png',
     ]
 c = urllib3.PoolManager()
 for file in folders_in:
