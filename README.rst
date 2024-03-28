@@ -43,6 +43,6 @@ Contributing
 Refer to the `contribution guidelines`_ for more information.
 
 
-.. _contribution guidelines: https://github.com/pyfar/imkar/blob/develop/CONTRIBUTING.rst
+.. _contribution guidelines: https://github.com/pyfar/imkar/blob/main/CONTRIBUTING.rst
 .. _pyfar.org: https://pyfar.org
 .. _read the docs: https://imkar.readthedocs.io/en/latest
