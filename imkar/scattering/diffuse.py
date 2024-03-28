@@ -111,24 +111,31 @@ def diffuse(reverberation_time, speed_of_sound, air_attenuation,
     # start calculations
 
     if (calculation_method == "ISO"):
+        c_1 = speed_of_sound[..., 0]
+        c_2 = speed_of_sound[..., 1]
+        c_3 = speed_of_sound[..., 2]
+        c_4 = speed_of_sound[..., 3]
+        RT_1 = reverberation_time.freq[..., 0, :]
+        RT_2 = reverberation_time.freq[..., 1, :]
+        RT_3 = reverberation_time.freq[..., 2, :]
+        RT_4 = reverberation_time.freq[..., 3, :]
         # random-incidence absorption coefficient
         alpha_s = (55.3*volume_room/sample_area *
-               (1/(speed_of_sound[:, 1]*reverberation_time.freq[:, 1])-1 /
-                (speed_of_sound[:, 0]*reverberation_time.freq[:, 0])) -
+               (1/(c_2*RT_2)-1 / (c_1*RT_1)) -
                4*volume_room/sample_area *
                (air_attenuation[..., 1, :]-air_attenuation[..., 0, :]))
 
         # specular absorption coefficient
         alpha_spec = (55.3*volume_room/sample_area *
-                  (1/(speed_of_sound[:, 3]*reverberation_time.freq[:, 3])
-                   - 1/(speed_of_sound[:, 2]*reverberation_time.freq[:, 2])) -
+                  (1/(c_4*reverberation_time.freq[:, 3])
+                   - 1/(c_2*reverberation_time.freq[:, 2])) -
                   4*volume_room/sample_area *
                   (air_attenuation[:, 3]-air_attenuation[:, 2]))
 
         # scattering coefficient for the base plate
         scattering_base = (55.3*volume_room/sample_area *
-                  (1/(speed_of_sound[:, 2]*reverberation_time.freq[:, 2])
-                   - 1/(speed_of_sound[:, 0]*reverberation_time.freq[:, 0])) -
+                  (1/(c_3*reverberation_time.freq[:, 2])
+                   - 1/(c_1*reverberation_time.freq[:, 0])) -
                   4*volume_room/sample_area *
                   (air_attenuation[:, 2]-air_attenuation[:, 0]))
 
