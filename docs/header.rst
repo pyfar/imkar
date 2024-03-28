@@ -4,8 +4,8 @@
 
    Home <https://pyfar-gallery.readthedocs.io>
    Examples <https://pyfar-gallery.readthedocs.io/en/latest/examples_gallery.html>
-   pyfar <pyfar>
+   pyfar <https://pyfar.readthedocs.io>
    sofar <https://sofar.readthedocs.io>
    spharpy <https://spharpy.readthedocs.io>
    pyrato <https://pyrato.readthedocs.io>
-   imkar <https://imkar.readthedocs.io>
+   imkar <imkar>

@@ -135,7 +135,7 @@ redirects = {
 }
 
 # -- download navbar and style files from gallery -----------------------------
-branch = 'main'
+branch = 'add-imkar'
 link = f'https://github.com/pyfar/gallery/raw/{branch}/docs/'
 folders_in = [
     '_static/css/custom.css',
