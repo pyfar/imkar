@@ -117,7 +117,7 @@ html_theme_options = {
     "navbar_start": ["navbar-logo"],
     "navbar_end": ["navbar-icon-links", "theme-switcher"],
     "navbar_align": "content",
-    "header_links_before_dropdown": 8,
+    "header_links_before_dropdown": 10,
     "icon_links": [
         {
           "name": "GitHub",
@@ -144,6 +144,17 @@ redirects = {
 }
 
 # -- download navbar and style files from gallery -----------------------------
+def download_files_from_gallery(link, folders_in):
+    c = urllib3.PoolManager()
+    for file in folders_in:
+        url = link + file
+        filename = file
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with c.request('GET', url, preload_content=False) as res:
+            if res.status == 200:
+                with open(filename, 'wb') as out_file:
+                    shutil.copyfileobj(res, out_file)
+
 branch = 'main'
 link = f'https://github.com/pyfar/gallery/raw/{branch}/docs/'
 folders_in = [
@@ -152,23 +163,21 @@ folders_in = [
     '_static/header.rst',
     'resources/logos/pyfar_logos_fixed_size_imkar.png',
     ]
-c = urllib3.PoolManager()
-for file in folders_in:
-    url = link + file
-    filename = file
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with c.request('GET', url, preload_content=False) as res, open(filename, 'wb') as out_file:
-        shutil.copyfileobj(res, out_file)
+download_files_from_gallery(link, folders_in)
+# if logo does not exist, use pyfar logo
+if not os.path.exists(html_logo):
+    download_files_from_gallery(
+        link, ['resources/logos/pyfar_logos_fixed_size_pyfar.png'])
+    shutil.copyfile(
+        'resources/logos/pyfar_logos_fixed_size_pyfar.png', html_logo)
 
 # replace imkar hard link to internal link
 with open("_static/header.rst", "rt") as fin:
     with open("header.rst", "wt") as fout:
-        contains_imkar = False
-        for line in fin:
-            line_new = line.replace(f'https://{project}.readthedocs.io', project)
-            if line_new != line:
-                contains_imkar = True
-            fout.write(line_new)
-        if not contains_imkar:
-            fout.write(f'   {project} <{project}>\n')
+        lines = [line.replace(f'https://{project}.readthedocs.io', project) for line in fin]
+        contains_project = any(project in line for line in lines)
 
+        fout.writelines(lines)
+
+        if not contains_project:
+            fout.write(f'   {project} <{project}>\n')
