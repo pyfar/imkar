@@ -163,5 +163,12 @@ for file in folders_in:
 # replace imkar hard link to internal link
 with open("_static/header.rst", "rt") as fin:
     with open("header.rst", "wt") as fout:
+        contains_imkar = False
         for line in fin:
-            fout.write(line.replace(f'https://{project}.readthedocs.io', project))
+            line_new = line.replace(f'https://{project}.readthedocs.io', project)
+            if line_new != line:
+                contains_imkar = True
+            fout.write(line_new)
+        if not contains_imkar:
+            fout.write(f'   {project} <{project}>\n')
+
