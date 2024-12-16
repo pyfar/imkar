@@ -17,6 +17,7 @@ Modules
    :maxdepth: 1
 
    modules/imkar
+   modules/imkar.scattering
 
 
 .. _examples gallery: https://pyfar-gallery.readthedocs.io/en/latest/examples_gallery.html
