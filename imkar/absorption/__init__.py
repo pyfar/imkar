@@ -1,3 +1,5 @@
+"""Module for absorption coefficient calculations."""
+
 from .ReverberationRoom import (
     ReverberationRoom,
 )

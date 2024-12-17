@@ -1,9 +1,23 @@
+"""A module to implement the ISO 354.
+"""
 import pyfar as pf
 import numpy as np
 
 
 class ReverberationRoom:
-    """
+    """A class to check the conditions for a reverberation room according to
+    ISO 354.
+
+    Parameters
+    ----------
+    volume : float
+        the volume of the room, in cubic metres.
+    surface : float
+        _description_
+    I_max : float
+        the length of the longest straight line which fits within the
+        boundary of the room (e.g. in a rectangular room it is the
+        major diagonal), in metres.
     """
 
     def __init__(self, volume, surface, I_max):
