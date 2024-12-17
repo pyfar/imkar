@@ -5,3 +5,9 @@
 __author__ = """The pyfar developers"""
 __email__ = ''
 __version__ = '0.1.0'
+
+from . import absorption
+
+__all__ = [
+    'absorption',
+]
