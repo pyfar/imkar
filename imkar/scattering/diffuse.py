@@ -2,50 +2,6 @@ import pyfar as pf
 import numpy as np
 
 
-class ReverberationRoom:
-    """
-    """
-    def __init__(self, volume, surface):
-        """_summary_.
-
-        Parameters
-        ----------
-        volume : float
-            the volume of the room, in cubic metres.
-        surface : _type_
-            _description_
-        """
-        self.volume = volume
-        self.surface = surface
-
-    def check_iso(self, I_max, c, T1, m1):
-        """_summary_.
-
-        Parameters
-        ----------
-        I_max : float
-            the length of the longest straight line which fits within the
-            boundary of the room (e.g. in a rectangular room it is the
-            major diagonal), in metres.
-        c : float
-            the propagation speed of sound in air, in metres per second.
-        T1 : float
-            the reverberation time, in seconds,
-            of the empty reverberation room;
-        m1 : float
-            is the power attenuation coefficient, in reciprocal metres,
-            calculated according to ISO 9613-1 using the climatic conditions
-            that have been present in the empty reverberation room during
-            the measurement. The value of m can be calculated from the
-            attenuation coefficient, alpha, which is used in ISO 9613-1
-            according to the formula
-        """
-        # 6.1.1: V > 150, better V > 200, V < 500
-        # 6.1.2: I_max < 1.9 V ** (1/3)
-        # 6.1.3 diffusion
-        # 6.1.4: A_1 = 55.3 * V / (c*T_1) - (4*V *m_1)
-
-
 def diffuse(reverberation_time, speed_of_sound, air_attenuation,
             calculation_method='ISO', scale_factor=5,
             sample_area=0.5026548, baseplate_area=0.58088,
