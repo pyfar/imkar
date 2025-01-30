@@ -1,9 +1,9 @@
 """Module for absorption coefficient calculations."""
 
-from .ReverberationRoom import (
-    ReverberationRoom,
+from .AbsorptionCalculator import (
+    AbsorptionCalculator,
 )
 
 __all__ = [
-    'ReverberationRoom',
+    'AbsorptionCalculator',
 ]
