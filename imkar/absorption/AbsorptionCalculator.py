@@ -35,7 +35,7 @@ class AbsorptionCalculator():
         self.volume = volume
         self.longest_dimension = longest_dimension
         self.surface_area = surface_area
-    
+
     @classmethod
     def from_room_dimensions(cls, dimensions):
         """Create an AbsorptionCalculator from the dimensions of the room.
@@ -238,7 +238,7 @@ class AbsorptionCalculator():
                 reverberation_time) - (
             4 * self.volume * attenuation_factor)
         A_T = A_2 - A_1
-        absorption_coefficient = A_T / sample_area
+        absorption_coefficient = A_T / self.sample_area
         return absorption_coefficient
 
     def analyse_environmental_conditions(
