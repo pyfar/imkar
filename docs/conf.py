@@ -55,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'imkar'
-copyright = "2024, The pyfar developers"
+copyright = "2025, The pyfar developers"
 author = "The pyfar developers"
 
 # The version info for the project you're documenting, acts as replacement
@@ -117,7 +117,7 @@ html_theme_options = {
     "navbar_start": ["navbar-logo"],
     "navbar_end": ["navbar-icon-links", "theme-switcher"],
     "navbar_align": "content",
-    "header_links_before_dropdown": 10,
+    "header_links_before_dropdown": 8,
     "icon_links": [
         {
           "name": "GitHub",
@@ -144,6 +144,15 @@ redirects = {
 }
 
 # -- download navbar and style files from gallery -----------------------------
+branch = 'main'
+link = f'https://github.com/pyfar/gallery/raw/{branch}/docs/'
+folders_in = [
+    '_static/css/custom.css',
+    '_static/favicon.ico',
+    '_static/header.rst',
+    'resources/logos/pyfar_logos_fixed_size_imkar.png',
+    ]
+
 def download_files_from_gallery(link, folders_in):
     c = urllib3.PoolManager()
     for file in folders_in:
@@ -155,14 +164,6 @@ def download_files_from_gallery(link, folders_in):
                 with open(filename, 'wb') as out_file:
                     shutil.copyfileobj(res, out_file)
 
-branch = 'main'
-link = f'https://github.com/pyfar/gallery/raw/{branch}/docs/'
-folders_in = [
-    '_static/css/custom.css',
-    '_static/favicon.ico',
-    '_static/header.rst',
-    'resources/logos/pyfar_logos_fixed_size_imkar.png',
-    ]
 download_files_from_gallery(link, folders_in)
 # if logo does not exist, use pyfar logo
 if not os.path.exists(html_logo):
@@ -179,5 +180,6 @@ with open("_static/header.rst", "rt") as fin:
 
         fout.writelines(lines)
 
+        # add project to the list of projects if not in header
         if not contains_project:
             fout.write(f'   {project} <{project}>\n')
