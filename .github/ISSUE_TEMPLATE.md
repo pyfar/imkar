@@ -3,7 +3,7 @@
 * imkar version:
 * Python version:
 * Operating System:
-* Did you install pyfar via pip:
+* Did you install imkar via pip:
 
 ## Description
 
