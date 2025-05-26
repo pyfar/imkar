@@ -87,7 +87,8 @@ def correlation_method(
             "broadcastable except for the last dimension")
     # Test whether the objects are able to perform arithmetic operations.
     # e.g. does the frequency vectors match
-    _ = sample_pressure + p_reference
+    _ = sample_pressure + reference_pressure
+
     # prepare data
     microphone_weights = microphone_weights[:, np.newaxis]
     p_sample = sample_pressure.freq
