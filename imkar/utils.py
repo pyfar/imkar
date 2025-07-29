@@ -47,7 +47,7 @@ def paris_formula(coefficients, incident_directions):
     if not isinstance(coefficients, pf.FrequencyData):
         raise ValueError("coefficients has to be FrequencyData")
     if not isinstance(incident_directions, pf.Coordinates):
-        raise ValueError("incident_directions have to be None or Coordinates")
+        raise ValueError("incident_directions have to be Coordinates")
     if incident_directions.cshape[0] != coefficients.cshape[-1]:
         raise ValueError(
             "the last dimension of coefficients needs be same as "
