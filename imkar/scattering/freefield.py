@@ -6,43 +6,41 @@ import pyfar as pf
 def correlation_method(
         sample_pressure, reference_pressure, microphone_weights):
     r"""
-    Calculate the incident-dependent free-field scattering coefficient.
+    Calculate the scattering coefficient from free-field reflection pattern.
 
     This function uses the Mommertz correlation method [#]_ to compute the
-    scattering coefficient of the input data:
+    scattering coefficient by averaging over the microphone positions:
 
     .. math::
         s = 1 -
-            \frac{|\sum_w \underline{p}_{\text{sample}}(\vartheta,\varphi)
-            \cdot \underline{p}_{\text{reference}}^*(\vartheta,\varphi)
-            \cdot w(\vartheta,\varphi)|^2}
-            {\sum_w |\underline{p}_{\text{sample}}(\vartheta,\varphi)|^2
-            \cdot w(\vartheta,\varphi) \cdot \sum_w
-            |\underline{p}_{\text{reference}}(\vartheta,\varphi)|^2
-            \cdot w(\vartheta,\varphi) }
+            \frac{|\sum_{\Omega_r} \underline{p}_{\text{sample}}(\Omega_r)
+            \cdot \underline{p}_{\text{reference}}^*(\Omega_r)
+            \cdot w(\Omega_r)|^2}
+            {\sum_{\Omega_r} |\underline{p}_{\text{sample}}(\Omega_r)|^2
+            \cdot w(\Omega_r) \cdot \sum_{\Omega_r}
+            |\underline{p}_{\text{reference}}(\Omega_r)|^2
+            \cdot w(\Omega_r) }
 
     where:
         - :math:`\underline{p}_{\text{sample}}` is the reflected sound
           pressure of the sample under investigation.
         - :math:`\underline{p}_{\text{reference}}` is the reflected sound
           pressure from the reference sample.
-        - :math:`w` represents the area weights of the sampling, and
-          :math:`\vartheta` and :math:`\varphi` are the ``colatitude``
-          and ``azimuth`` angles from the
-          :py:class:`~pyfar.classes.coordinates.Coordinates` object.
-
-    The test sample is assumed to lie in the x-y-plane.
+        - :math:`\Omega_r` represents the solid angle of the microphone
+          positions and :math:`w(\Omega_r)` represents its area weights.
 
     Parameters
     ----------
-    sample_pressure : :py:class:`~pyfar.classes.audio.FrequencyData`
+    sample_pressure : :py:class:`~pyfar.FrequencyData`, :py:class:`~pyfar.Signal`
         Reflected sound pressure or directivity of the test sample. Its cshape
         must be (..., microphone_weights.size) and broadcastable to the
-        cshape of ``reference_pressure``.
-    reference_pressure : :py:class:`~pyfar.classes.audio.FrequencyData`
+        cshape of ``reference_pressure``. The frequency vectors of both
+        ``sample_pressure`` and ``reference_pressure`` must match.
+    reference_pressure : :py:class:`~pyfar.FrequencyData`, :py:class:`~pyfar.Signal`
         Reflected sound pressure or directivity of the reference sample. Its
         cshape must be (..., microphone_weights.size) and broadcastable to the
-        cshape of ``sample_pressure``.
+        cshape of ``sample_pressure``. The frequency vectors of both
+        ``sample_pressure`` and ``reference_pressure`` must match.
     microphone_weights : array_like
         1D array containing the area weights for the microphone positions.
         No normalization is required. Its shape must match the last dimension
@@ -51,7 +49,9 @@ def correlation_method(
     Returns
     -------
     scattering_coefficients : :py:class:`~pyfar.classes.audio.FrequencyData`
-        The scattering coefficient for each incident direction as a function
+        The scattering coefficient of the broadcasted shape of
+        ``sample_pressure`` and ``reference_pressure`` excluding the
+        last dimension.
         of frequency.
 
     References
@@ -63,11 +63,14 @@ def correlation_method(
 
     """
     # check input types
-    if not isinstance(sample_pressure, pf.FrequencyData):
-        raise TypeError("sample_pressure must be of type pyfar.FrequencyData")
-    if not isinstance(reference_pressure, pf.FrequencyData):
+    if not isinstance(sample_pressure, (pf.FrequencyData, pf.Signal)):
         raise TypeError(
-            "reference_pressure must be of type pyfar.FrequencyData")
+            "sample_pressure must be of type pyfar.FrequencyData or "
+            "pyfar.Signal")
+    if not isinstance(reference_pressure, (pf.FrequencyData, pf.Signal)):
+        raise TypeError(
+            "reference_pressure must be of type pyfar.FrequencyData or "
+            "pyfar.Signal")
     microphone_weights = np.atleast_1d(
         np.asarray(microphone_weights, dtype=float))
 
@@ -81,10 +84,6 @@ def correlation_method(
             "The last dimension of reference_pressure must match the size of "
             "microphone_weights")
 
-    if sample_pressure.cshape[:-1] != reference_pressure.cshape[:-1]:
-        raise ValueError(
-            "The cshape of sample_pressure and reference_pressure must be "
-            "broadcastable except for the last dimension")
     # Test whether the objects are able to perform arithmetic operations.
     # e.g. does the frequency vectors match
     _ = sample_pressure + reference_pressure
@@ -100,8 +99,8 @@ def correlation_method(
     p_cross_sum = np.sum(
             p_sample * np.conj(p_reference) * microphone_weights, axis=-2)
 
-    data_scattering_coefficient \
-        = 1 - ((np.abs(p_cross_sum)**2)/(p_sample_sum*p_ref_sum))
+    data_scattering_coefficient = 1 - np.abs(p_cross_sum)**2/(
+        p_sample_sum*p_ref_sum)
 
     # create pyfar.FrequencyData object
     scattering_coefficients = pf.FrequencyData(
