@@ -16,7 +16,6 @@ Modules
 .. toctree::
    :maxdepth: 1
 
-   modules/imkar
    modules/imkar.scattering.diffuse
 
 

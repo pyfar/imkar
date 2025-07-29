@@ -26,10 +26,10 @@ def maximum_sample_absorption_coefficient(frequencies) -> pf.FrequencyData:
 
     References
     ----------
-    [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
-        Measurement of the random-incidence scattering coefficient in a
-        reverberation room. Geneva, Switzerland: International Organization
-        for Standards, 2004.
+    .. [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
+           Measurement of the random-incidence scattering coefficient in a
+           reverberation room. Geneva, Switzerland: International Organization
+           for Standards, 2004.
 
     """
     # input checks
@@ -67,10 +67,10 @@ def maximum_baseplate_scattering_coefficient(N:int=1) -> pf.FrequencyData:
 
     References
     ----------
-    [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
-        Measurement of the random-incidence scattering coefficient in a
-        reverberation room. Geneva, Switzerland: International Organization
-        for Standards, 2004.
+    .. [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
+           Measurement of the random-incidence scattering coefficient in a
+           reverberation room. Geneva, Switzerland: International Organization
+           for Standards, 2004.
 
     """
     if not isinstance(N, int):
@@ -146,10 +146,10 @@ def calculation(
 
     References
     ----------
-    [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
-        Measurement of the random-incidence scattering coefficient in a
-        reverberation room. Geneva, Switzerland: International Organization
-        for Standards, 2004.
+    .. [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
+           Measurement of the random-incidence scattering coefficient in a
+           reverberation room. Geneva, Switzerland: International Organization
+           for Standards, 2004.
     """
     T_1 = reverberation_times[..., 0]
     T_2 = reverberation_times[..., 1]
