@@ -122,7 +122,7 @@ def calculation(
     speed_of_sound : np.ndarray
         is the speed of sound in air, in metres per second (m/s),
         during the measurement of each measurement conditions of
-        shape (..., 4)..
+        shape (..., 4).
     air_attenuation_coefficient : pf.FrequencyData
         the energy attenuation coefficient of air, in reciprocal metres
         (:math:`m^-1`), calculated according to ISO 9613-1,
