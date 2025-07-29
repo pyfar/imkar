@@ -117,16 +117,16 @@ def calculation(
 
     Parameters
     ----------
-    reverberation_times : pf.FrequencyData
+    reverberation_times : pyfar.FrequencyData
         The reverberation times in seconds of the measurement conditions of
         cshape (..., 4).
-    speed_of_sound : np.ndarray
+    speed_of_sound : numpy.ndarray
         is the speed of sound in air, in metres per second (m/s),
         during the measurement of each measurement conditions of
         shape (..., 4).
-    air_attenuation_coefficient : pf.FrequencyData
+    air_attenuation_coefficient : pyfar.FrequencyData
         the energy attenuation coefficient of air, in reciprocal metres
-        (:math:`m^-1`), calculated according to ISO 9613-1,
+        (:math:`m^{-1}`), calculated according to ISO 9613-1,
         using the temperature and relative humidity during the measurement
         of each measurement conditions of cshape (..., 4).
     volume : float
@@ -136,13 +136,13 @@ def calculation(
 
     Returns
     -------
-    scattering : pf.FrequencyData
+    scattering : pyfar.FrequencyData
         The random-incidence scattering coefficient.
-    s_base : pf.FrequencyData
+    s_base : pyfar.FrequencyData
         The base plate scattering coefficient.
-    alpha_s : pf.FrequencyData
+    alpha_s : pyfar.FrequencyData
         The random-incidence absorption coefficient.
-    alpha_spec : pf.FrequencyData
+    alpha_spec : pyfar.FrequencyData
         The random-incidence specular absorption coefficient.
 
     References
