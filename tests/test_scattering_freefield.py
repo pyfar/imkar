@@ -57,7 +57,7 @@ def test_correlation_fractional_scattering(s_scatter, Phi_scatter_deg):
     """
     Test analytic scattering coefficient calculation for non 0 or 1.
 
-    for the sample pressure, two plane waves are used. The scattered and the
+    For the sample pressure, two plane waves are used. The scattered and the
     specular wave. The reflection factor of both waves is calculated based on
     the scattering coefficient and the scattering angle.
     """
@@ -91,7 +91,7 @@ def test_correlation_fractional_scattering(s_scatter, Phi_scatter_deg):
 
     # Calculate the scattering coefficient with for the scattered wave
     # in other words, the reference pressure is the scattered wave (R=1)
-    # to the result will be 1-s_scatter
+    # so the result will be 1-s_scatter
     reference_pressure = plane_wave(
         1, pf.Coordinates.from_spherical_front(
             np.pi/2, Phi_scatter, 1), sampling)
@@ -100,8 +100,8 @@ def test_correlation_fractional_scattering(s_scatter, Phi_scatter_deg):
     )
     npt.assert_almost_equal(sd_scatter.freq, s_scatter, 1)
 
-    # Calculate the scattering coefficient with for 5° more then the specular
-    # wave, than the scattering coefficient should be 0
+    # Calculate the scattering coefficient for 5° more than the specular
+    # wave, then the scattering coefficient should be 0
     reference_pressure = plane_wave(
         1, pf.Coordinates.from_spherical_front(
             np.pi/2, Phi_spec+5/180*np.pi, 1), sampling)
