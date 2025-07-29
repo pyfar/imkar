@@ -16,12 +16,12 @@ def maximum_sample_absorption_coefficient(frequencies) -> pf.FrequencyData:
 
     Parameters
     ----------
-    frequencies : np.ndarray
+    frequencies : numpy.ndarray
         The frequencies at which the absorption coefficient is calculated.
 
     Returns
     -------
-    alpha_s_max : pf.FrequencyData
+    alpha_s_max : pyfar.FrequencyData
         The maximum sample absorption coefficient.
 
     References
@@ -62,7 +62,7 @@ def maximum_baseplate_scattering_coefficient(N: int = 1) -> pf.FrequencyData:
 
     Returns
     -------
-    s_base_max : pf.FrequencyData
+    s_base_max : pyfar.FrequencyData
         The maximum baseplate scattering coefficient.
 
     References
