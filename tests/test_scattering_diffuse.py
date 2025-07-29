@@ -66,7 +66,7 @@ def test_maximum_baseplate_scattering_coefficient_invalid_type():
         isd.maximum_baseplate_scattering_coefficient(N=-1)
 
 def test_maximum_baseplate_scattering_coefficient_negative_N():
-    # Negative N is technically an integer, but let's check if it works
+    # Test with a positive integer N to verify expected behavior
     N = 5
     result = isd.maximum_baseplate_scattering_coefficient(N)
     expected_freqs = np.array([
