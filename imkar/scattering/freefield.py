@@ -61,7 +61,7 @@ def correlation_method(
             Acoustics, vol. 60, no. 2, pp. 201-203, June 2000,
             doi: 10.1016/S0003-682X(99)00057-2.
 
-    """
+    """  # noqa: E501
     # check input types
     if not isinstance(sample_pressure, (pf.FrequencyData, pf.Signal)):
         raise TypeError(
