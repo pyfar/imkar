@@ -49,10 +49,9 @@ def correlation_method(
     Returns
     -------
     scattering_coefficients : :py:class:`~pyfar.classes.audio.FrequencyData`
-        The scattering coefficient of the broadcasted shape of
-        ``sample_pressure`` and ``reference_pressure`` excluding the
+        The scattering coefficient of the broadcasted cshape of
+        ``sample_pressure`` and ``reference_pressure``, excluding the
         last dimension.
-        of frequency.
 
     References
     ----------
