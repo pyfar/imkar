@@ -49,7 +49,7 @@ def maximum_sample_absorption_coefficient(frequencies) -> pf.FrequencyData:
     )
 
 
-def maximum_baseplate_scattering_coefficient(N:int=1) -> pf.FrequencyData:
+def maximum_baseplate_scattering_coefficient(N: int = 1) -> pf.FrequencyData:
     """Maximum scattering coefficient for the base plate alone.
 
     This is based on Table 1 in ISO 17497-1:2004 [#]_.
@@ -62,7 +62,7 @@ def maximum_baseplate_scattering_coefficient(N:int=1) -> pf.FrequencyData:
 
     Returns
     -------
-    s_base_max : pf.Frequency
+    s_base_max : pf.FrequencyData
         The maximum baseplate scattering coefficient.
 
     References
