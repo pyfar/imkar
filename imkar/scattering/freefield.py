@@ -31,12 +31,12 @@ def correlation_method(
 
     Parameters
     ----------
-    sample_pressure : :py:class:`~pyfar.FrequencyData`, :py:class:`~pyfar.Signal`
+    sample_pressure : pyfar.FrequencyData, pyfar.Signal
         Reflected sound pressure or directivity of the test sample. Its cshape
         must be (..., microphone_weights.size) and broadcastable to the
         cshape of ``reference_pressure``. The frequency vectors of both
         ``sample_pressure`` and ``reference_pressure`` must match.
-    reference_pressure : :py:class:`~pyfar.FrequencyData`, :py:class:`~pyfar.Signal`
+    reference_pressure : pyfar.FrequencyData, pyfar.Signal
         Reflected sound pressure or directivity of the reference sample. Its
         cshape must be (..., microphone_weights.size) and broadcastable to the
         cshape of ``sample_pressure``. The frequency vectors of both
@@ -48,7 +48,7 @@ def correlation_method(
 
     Returns
     -------
-    scattering_coefficients : :py:class:`~pyfar.classes.audio.FrequencyData`
+    scattering_coefficients : pyfar.FrequencyData
         The scattering coefficient of the broadcasted cshape of
         ``sample_pressure`` and ``reference_pressure``, excluding the
         last dimension.
@@ -60,7 +60,7 @@ def correlation_method(
             Acoustics, vol. 60, no. 2, pp. 201-203, June 2000,
             doi: 10.1016/S0003-682X(99)00057-2.
 
-    """  # noqa: E501
+    """
     # check input types
     if not isinstance(sample_pressure, (pf.FrequencyData, pf.Signal)):
         raise TypeError(
