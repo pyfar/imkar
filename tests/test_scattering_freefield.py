@@ -144,9 +144,9 @@ def test_correlation_method_invalid_reference_pressure_type():
 
 
 def test_correlation_method_mismatched_sample_pressure_weights():
-    sample_pressure = pf.FrequencyData(np.array([[1, 2, 3]]), [100, 200, 300])
+    sample_pressure = pf.FrequencyData(np.array([[1, 2, 3]]).T, [100])
     reference_pressure = pf.FrequencyData(
-        np.array([[1, 2, 3]]), [100, 200, 300])
+        np.array([[1, 2]]).T, [100])
     microphone_weights = np.array([0.5, 0.5])
     with pytest.raises(
             ValueError, match="The last dimension of sample_pressure must "
@@ -156,23 +156,12 @@ def test_correlation_method_mismatched_sample_pressure_weights():
 
 
 def test_correlation_method_mismatched_reference_pressure_weights():
-    sample_pressure = pf.FrequencyData(np.array([[1, 2, 3]]), [100, 200, 300])
+    sample_pressure = pf.FrequencyData(np.array([[1, 2]]).T, [100])
     reference_pressure = pf.FrequencyData(
-        np.array([[1, 2, 3]]), [100, 200, 300])
+        np.array([[1, 2, 3]]).T, [100])
     microphone_weights = np.array([0.5, 0.5])
     with pytest.raises(
-            ValueError, match="The last dimension of sample_pressure must "
-            "match the size of microphone_weights"):
-        sff.correlation_method(
-            sample_pressure, reference_pressure, microphone_weights)
-
-
-def test_correlation_method_mismatched_sample_reference_shapes():
-    sample_pressure = pf.FrequencyData(np.array([[1, 2, 3]]), [100, 200, 300])
-    reference_pressure = pf.FrequencyData(np.array([[1, 2]]), [100, 200])
-    microphone_weights = np.array([0.5, 0.5, 0.5])
-    with pytest.raises(
-            ValueError, match="The last dimension of sample_pressure must "
+            ValueError, match="The last dimension of reference_pressure must "
             "match the size of microphone_weights"):
         sff.correlation_method(
             sample_pressure, reference_pressure, microphone_weights)
