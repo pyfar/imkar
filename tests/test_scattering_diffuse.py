@@ -65,7 +65,7 @@ def test_maximum_baseplate_scattering_coefficient_invalid_type():
     with pytest.raises(TypeError, match="N must be a positive integer."):
         isd.maximum_baseplate_scattering_coefficient(N=-1)
 
-def test_maximum_baseplate_scattering_coefficient_negative_N():
+def test_maximum_baseplate_scattering_coefficient_N():
     # Test with a positive integer N to verify expected behavior
     N = 5
     result = isd.maximum_baseplate_scattering_coefficient(N)
