@@ -90,3 +90,92 @@ def maximum_baseplate_scattering_coefficient(N: int = 1) -> pf.FrequencyData:
         frequencies=np.array(frequencies)/N,
         comment="Maximum scattering coefficient of the baseplate",
     )
+
+
+def calculation(
+        reverberation_times, speed_of_sound,
+        air_attenuation_coefficient,
+        volume, surface_sample) -> tuple:
+    """
+    Calculate the diffuse scattering coefficient after ISO 17497-1:2004.
+
+    Measurement conditions for the four different reverberation times
+    and the corresponding speed of sound and air attenuation
+    coefficients based on Table 2 in ISO 17497-1:2004 [#]_.
+
+    +------------------------+-------------+--------------+
+    | measurement condition  | test sample |  turntable   |
+    +------------------------+-------------+--------------+
+    |           1            | not present | not rotating |
+    +------------------------+-------------+--------------+
+    |           2            |   present   | not rotating |
+    +------------------------+-------------+--------------+
+    |           3            | not present |   rotating   |
+    +------------------------+-------------+--------------+
+    |           4            |   present   |   rotating   |
+    +------------------------+-------------+--------------+
+
+    Parameters
+    ----------
+    reverberation_times : pyfar.FrequencyData
+        The reverberation times in seconds of the measurement conditions of
+        cshape (..., 4).
+    speed_of_sound : numpy.ndarray
+        is the speed of sound in air, in metres per second (m/s),
+        during the measurement of each measurement conditions of
+        shape (..., 4).
+    air_attenuation_coefficient : pyfar.FrequencyData
+        the energy attenuation coefficient of air, in reciprocal metres
+        (:math:`m^{-1}`), calculated according to ISO 9613-1,
+        using the temperature and relative humidity during the measurement
+        of each measurement conditions of cshape (..., 4).
+    volume : float
+        volume of the reverberation room, in cubic metres (:math:`m^3`).
+    surface_sample : float
+        is the area of the test sample, in square metres (:math:`m^2`).
+
+    Returns
+    -------
+    scattering : pyfar.FrequencyData
+        The random-incidence scattering coefficient.
+    s_base : pyfar.FrequencyData
+        The base plate scattering coefficient.
+    alpha_s : pyfar.FrequencyData
+        The random-incidence absorption coefficient.
+    alpha_spec : pyfar.FrequencyData
+        The random-incidence specular absorption coefficient.
+
+    References
+    ----------
+    .. [#] ISO 17497-1:2004, Sound-scattering properties of surfaces. Part 1:
+           Measurement of the random-incidence scattering coefficient in a
+           reverberation room. Geneva, Switzerland: International Organization
+           for Standards, 2004.
+    """
+    T_1 = reverberation_times[..., 0]
+    T_2 = reverberation_times[..., 1]
+    T_3 = reverberation_times[..., 2]
+    T_4 = reverberation_times[..., 3]
+    c_1 = speed_of_sound[..., 0]
+    c_2 = speed_of_sound[..., 1]
+    c_3 = speed_of_sound[..., 2]
+    c_4 = speed_of_sound[..., 3]
+    m_1 = air_attenuation_coefficient[..., 0]
+    m_2 = air_attenuation_coefficient[..., 1]
+    m_3 = air_attenuation_coefficient[..., 2]
+    m_4 = air_attenuation_coefficient[..., 3]
+    V = volume
+    S = surface_sample
+
+    # random incident absorption coefficient
+    alpha_s = 55.3 * V/S * (1/(c_2*T_2) - 1/(c_1*T_1)) - 4*V/S * (m_2-m_1)
+
+    # specular absorption coefficient
+    alpha_spec = 55.3 * V/S * (1/(c_4*T_4) - 1/(c_3*T_3)) - 4*V/S * (m_4-m_3)
+
+    # calculate scattering coefficient
+    scattering = (alpha_spec - alpha_s) / (1 - alpha_s)
+
+    s_base = 55.3*V/S*(1/(c_3*T_3) - 1/(c_1*T_1)) - 4*V/S*(m_3-m_1)
+
+    return scattering, s_base, alpha_s, alpha_spec
