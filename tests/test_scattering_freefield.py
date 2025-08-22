@@ -89,7 +89,7 @@ def test_correlation_fractional_scattering(s_scatter, Phi_scatter_deg):
     )
     npt.assert_almost_equal(sd_spec.freq, s_spec, 1)
 
-    # Calculate the scattering coefficient with for the scattered wave
+    # Calculate the scattering coefficient for the scattered wave
     # in other words, the reference pressure is the scattered wave (R=1)
     # so the result will be 1-s_scatter
     reference_pressure = plane_wave(

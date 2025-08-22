@@ -27,29 +27,29 @@ def correlation_method(
         - :math:`\underline{p}_{\text{reference}}` is the reflected sound
           pressure from the reference sample.
         - :math:`\Omega_r` represents the solid angle of the microphone
-          positions and :math:`w(\Omega_r)` represents its area weights.
+          positions and :math:`w(\Omega_r)` represents its area weight.
 
     Parameters
     ----------
     sample_pressure : pyfar.FrequencyData, pyfar.Signal
-        Reflected sound pressure or directivity of the test sample. Its cshape
-        must be (..., microphone_weights.size) and broadcastable to the
-        cshape of ``reference_pressure``. The frequency vectors of both
+        Reflected sound pressure or directivity of the test sample. Its `cshape`
+        must be ``(..., microphone_weights.size)`` and broadcastable to the
+        `cshape` of ``reference_pressure``. The frequency vectors of both
         ``sample_pressure`` and ``reference_pressure`` must match.
     reference_pressure : pyfar.FrequencyData, pyfar.Signal
         Reflected sound pressure or directivity of the reference sample. Its
-        cshape must be (..., microphone_weights.size) and broadcastable to the
-        cshape of ``sample_pressure``. The frequency vectors of both
+        `cshape` must be (..., microphone_weights.size) and broadcastable to the
+        `cshape` of ``sample_pressure``. The frequency vectors of both
         ``sample_pressure`` and ``reference_pressure`` must match.
     microphone_weights : array_like
         1D array containing the area weights for the microphone positions.
         No normalization is required. Its shape must match the last dimension
-        in the cshape of ``sample_pressure`` and ``reference_pressure``.
+        in the `cshape` of ``sample_pressure`` and ``reference_pressure``.
 
     Returns
     -------
     scattering_coefficients : pyfar.FrequencyData
-        The scattering coefficient of the broadcasted cshape of
+        The scattering coefficient of the broadcasted `cshape` of
         ``sample_pressure`` and ``reference_pressure``, excluding the
         last dimension.
 
