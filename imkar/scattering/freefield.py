@@ -32,14 +32,14 @@ def correlation_method(
     Parameters
     ----------
     sample_pressure : pyfar.FrequencyData, pyfar.Signal
-        Reflected sound pressure or directivity of the test sample. Its `cshape`
-        must be ``(..., microphone_weights.size)`` and broadcastable to the
-        `cshape` of ``reference_pressure``. The frequency vectors of both
-        ``sample_pressure`` and ``reference_pressure`` must match.
+        Reflected sound pressure or directivity of the test sample. Its
+        `cshape` must be ``(..., microphone_weights.size)`` and broadcastable
+        to the `cshape` of ``reference_pressure``. The frequency vectors
+        of both ``sample_pressure`` and ``reference_pressure`` must match.
     reference_pressure : pyfar.FrequencyData, pyfar.Signal
         Reflected sound pressure or directivity of the reference sample. Its
-        `cshape` must be (..., microphone_weights.size) and broadcastable to the
-        `cshape` of ``sample_pressure``. The frequency vectors of both
+        `cshape` must be (..., microphone_weights.size) and broadcastable
+        to the `cshape` of ``sample_pressure``. The frequency vectors of both
         ``sample_pressure`` and ``reference_pressure`` must match.
     microphone_weights : array_like
         1D array containing the area weights for the microphone positions.
@@ -82,10 +82,11 @@ def correlation_method(
         raise ValueError(
             "The last dimension of reference_pressure must match the size of "
             "microphone_weights")
-
-    # Test whether the objects are able to perform arithmetic operations.
-    # e.g. does the frequency vectors match
-    _ = sample_pressure + reference_pressure
+    # check frequency vectors
+    if not np.allclose(
+            reference_pressure.frequencies, sample_pressure.frequencies,
+            atol=1e-15):
+        raise ValueError("The frequencies do not match.")
 
     # prepare data
     microphone_weights = microphone_weights[:, np.newaxis]

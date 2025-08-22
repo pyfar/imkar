@@ -112,6 +112,7 @@ def test_correlation_fractional_scattering(s_scatter, Phi_scatter_deg):
 
 
 def test_correlation_one_scattering():
+    """Two plane waves in the different directions should result in s=1."""
     sampling = pf.samplings.sph_equal_area(5000)
     sampling.weights = pf.samplings.calculate_sph_voronoi_weights(sampling)
     sampling = sampling[sampling.z>0]
