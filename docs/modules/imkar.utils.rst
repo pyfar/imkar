@@ -1,7 +1,7 @@
-imkar
-=====
+imkar.utils
+===========
 
-.. automodule:: imkar
+.. automodule:: imkar.utils
    :members:
    :undoc-members:
    :show-inheritance:
