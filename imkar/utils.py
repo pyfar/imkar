@@ -6,7 +6,7 @@ import pyfar as pf
 def paris_formula(coefficients, incident_directions):
     r"""
     Calculate the random-incidence coefficient
-    according to Paris formula.
+    according to the Paris formula.
 
     The implementation follows the Equation 2.53 from [#]_ and is
     discretized as:
@@ -14,8 +14,8 @@ def paris_formula(coefficients, incident_directions):
     .. math::
         c_{rand} = \sum_{\Omega_S} c(\Omega_S) \cdot |\Omega_S \cdot n| \cdot w
 
-    with the ``coefficients`` :math:`c`, and the
-    area weights :math:`w` from the ``incident_directions``.
+    with the `coefficients` :math:`c`, and the
+    area weights :math:`w` from the `incident_directions`.
     :math:`|\Omega_S \cdot n|` represent the cosine of the angle between the
     surface normal and the incident direction.
 
@@ -31,8 +31,8 @@ def paris_formula(coefficients, incident_directions):
     incident_directions : pyfar.Coordinates
         Defines the incidence directions of each `coefficients` in a
         Coordinates object. Its cshape needs to be (n_incident_directions). In
-        sperical coordinates the radii needs to be constant. The weights need
-        to reflect the area weights.
+        sperical coordinates the radii needs to be constant. The area weights must be
+        stored in ``ìncedent_directions.weights``.
 
     Returns
     -------
