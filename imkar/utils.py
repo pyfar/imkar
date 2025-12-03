@@ -3,41 +3,44 @@ import numpy as np
 import pyfar as pf
 
 
-def paris_formula(coefficients, incident_directions):
+def paris_formula(coefficients, colatitude_rad, area_weights):
     r"""
     Calculate the random-incidence coefficient
     according to the Paris formula.
 
+    The Paris formula computes the random-incidence coefficient based on
+    directional coefficients. It is valid for scattering and absorption
+    coefficients and requires equally distributed incident directions
+    to get a valid result.
+    
     The implementation follows the Equation 2.53 from [#]_ and is
     discretized as:
 
     .. math::
-        c_{rand} = \sum_{\Omega_S} c(\Omega_S) \cdot |\Omega_S \cdot n| \cdot w
+        c_{rand} = \sum_{\Omega_S} c(\Omega_S) \cdot \cos(\theta) \cdot w
 
     with the `coefficients` :math:`c`, and the
     area weights :math:`w` from the `incident_directions`.
-    :math:`|\Omega_S \cdot n|` represent the cosine of the angle between the
+    :math:`\theta` represents the angle between the
     surface normal and the incident direction.
-
-    .. note::
-        The incident directions should be
-        equally distributed to get a valid result.
 
     Parameters
     ----------
     coefficients : pyfar.FrequencyData
         coefficients for different incident directions. Its cshape
-        needs to be (..., n_incident_directions)
-    incident_directions : pyfar.Coordinates
-        Defines the incidence directions of each `coefficients` in a
-        Coordinates object. Its cshape needs to be (n_incident_directions). In
-        sperical coordinates the radii needs to be constant. The area weights must be
-        stored in ``ìncedent_directions.weights``.
+        needs to be (..., n_incident_directions).
+    colatitude_rad : pyfar.Coordinates
+        Defines the angle between the surface normal and the sound
+        incidence in radiant. Its cshape
+        needs to be (n_incident_directions).
+    area_weights : np.ndarray
+        Area weights for each incident direction. Its cshape
+        needs to be (n_incident_directions).
 
     Returns
     -------
     random_coefficient : pyfar.FrequencyData
-        The random-incidence scattering coefficient.
+        The random-incidence coefficient.
 
     References
     ----------
@@ -46,20 +49,14 @@ def paris_formula(coefficients, incident_directions):
     """
     if not isinstance(coefficients, pf.FrequencyData):
         raise ValueError("coefficients has to be FrequencyData")
-    if not isinstance(incident_directions, pf.Coordinates):
-        raise ValueError("incident_directions have to be Coordinates")
-    if incident_directions.cshape[0] != coefficients.cshape[-1]:
+    if colatitude_rad.shape != area_weights.shape:
         raise ValueError(
-            "the last dimension of coefficients needs be same as "
-            "the incident_directions.cshape.")
+            "colatitude_rad and area_weights need to have the same shape.")
 
-    theta = incident_directions.colatitude
-    weight = np.cos(theta) * incident_directions.weights
+    theta = colatitude_rad
+    weight = np.cos(theta) * area_weights
+    weight = weight[..., np.newaxis]
     norm = np.sum(weight)
-    coefficients_freq = np.swapaxes(coefficients.freq, -1, -2)
-    random_coefficient = pf.FrequencyData(
-        np.sum(coefficients_freq*weight/norm, axis=-1),
-        coefficients.frequencies,
-        comment='random-incidence coefficient',
-    )
+    random_coefficient = coefficients*weight/norm
+    random_coefficient.freq = np.sum(random_coefficient.freq, axis=-2)
     return random_coefficient
