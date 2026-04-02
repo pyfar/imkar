@@ -29,7 +29,7 @@ def plane_wave(amplitude, direction, sampling):
     f = 5000
     c = 343
     x = sampling
-    direction.cartesian = direction.cartesian/direction.radius
+    direction.radius = 1
     dot_product = direction.x*x.x+direction.y*x.y+direction.z*x.z
     dot_product = dot_product[..., np.newaxis]
     f = np.atleast_1d(f)
