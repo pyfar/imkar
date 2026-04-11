@@ -11,7 +11,9 @@ imkar
    history
 
 
-Python Boilerplate contains all the boilerplate you need to create a Python package.
+A python package for material modeling and quantification in acoustics.
+
+A python package for material modeling and quantification in acoustics.
 
 .. grid:: 1 2 2 2
     :gutter: 4

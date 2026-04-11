@@ -36,15 +36,13 @@ jobs:
       version: <<parameters.version>>
     steps:
       - checkout
-    #   - run:
-    #       name: Install System Dependencies
-    #       command: sudo apt-get update && sudo apt-get install -y libsndfile1
+            
       - run:
           name: install dependencies
           command: pip install ".[tests]"
       - run:
           name: Run tests
-          command: pytest
+          command: pytest tests
 
   ruff:
     parameters:
@@ -75,9 +73,7 @@ jobs:
       version: <<parameters.version>>
     steps:
       - checkout
-   #    - run:
-   #        name: Install System Dependencies
-   #        command: sudo apt-get update && sudo apt-get install -y libsndfile1 texlive-latex-extra dvipng
+      
       - run:
           name: Sphinx
           command: |
@@ -96,9 +92,7 @@ jobs:
       version: <<parameters.version>>
     steps:
       - checkout
-   #    - run:
-   #        name: Install System Dependencies
-   #        command: sudo apt-get update && sudo apt-get install -y libsndfile1 texlive-latex-extra dvipng
+      
       - run:
           name: install dependencies
           command: pip install ".[tests]"
@@ -108,7 +102,7 @@ jobs:
           name: Run tests
           command: pytest tests -W error::DeprecationWarning
 
-  test_pypi_publish:
+  test_package_build:
     parameters:
       version:
         description: "version tag"
@@ -119,9 +113,7 @@ jobs:
       version: <<parameters.version>>
     steps:
       - checkout
-    #  - run:
-    #      name: Install System Dependencies
-    #      command: sudo apt-get update && sudo apt-get install -y libsndfile1
+      
       - run:
           name: install dependencies
           command: pip install ".[deploy]"
@@ -142,9 +134,7 @@ jobs:
       version: <<parameters.version>>
     steps:
       - checkout
-      - run:
-          name: Install System Dependencies
-          command: sudo apt-get update && sudo apt-get install -y libsndfile1
+      
       - run:
           name: install dependencies
           command: pip install ".[deploy]"
@@ -154,6 +144,7 @@ jobs:
             python -m build
             twine check dist/*
             twine upload dist/*
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -165,17 +156,16 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.9"
-                - "3.10"
                 - "3.11"
                 - "3.12"
                 - "3.13"
+                - "3.14"
                 
       - ruff:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
 
@@ -183,7 +173,7 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
 
@@ -191,17 +181,23 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
 
-      - test_pypi_publish:
+      - test_package_build:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+
 
   test_and_publish:
     # Test and publish on new git version tags
@@ -211,11 +207,10 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.9"
-                - "3.10"
                 - "3.11"
                 - "3.12"
                 - "3.13"
+                - "3.14"
                 
           filters:
             branches:
@@ -228,7 +223,7 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
           filters:
@@ -242,7 +237,7 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
           filters:
@@ -256,7 +251,7 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
           filters:
@@ -270,7 +265,7 @@ workflows:
           matrix:
             parameters:
               version:
-                - "3.13"
+                - "3.14"
           requires:
             - build_and_test
             - ruff
@@ -282,3 +277,4 @@ workflows:
             # only act on version tags
             tags:
               only: /^v[0-9]+(\.[0-9]+)*$/
+
