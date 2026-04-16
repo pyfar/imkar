@@ -1,15 +1,22 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: 010229d
+_commit: 12a22c7
 _src_path: https://github.com/pyfar/template-pyfar-package
 apt_packages: ''
 author: The pyfar developers
 copyright_statement: 2025, The pyfar developers
 dependencies: numpy,scipy,pyfar
+docs_custom_import: ''
 git_username: pyfar
 gitignore_custom: ''
+intersphinx_mapping:
+- numpy
+- scipy
+- pyfar
+- gallery
 keywords: acoustics,pyfar,impedance,absorption,scattering
 license: MIT
 logo_path_gallery: resources/logos/pyfar_logos_fixed_size_imkar.png
+manifest_custom: ''
 minimum_python_version: '3.11'
 project_getting_started: 'The [pyfar workshop](https://mybinder.org/v2/gh/pyfar/gallery/main?labpath=docs/gallery/interactive/pyfar_introduction.ipynb)
 
